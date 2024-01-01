@@ -1,0 +1,41 @@
+<!--
+   index.html
+-->
+
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <title>Nachteule</title>
+  </head>
+  <body>
+    <h1>Nachteule Dashboard</h1>
+    <hr>
+	<h3>Sensordaten</h3>
+	<p>Temperatur: {{ temp }} &deg;C</p>
+	<p>Rel. Luftfeuchte: {{ hum }} %</p>
+	<a href="/">Aktualisieren</a>
+	<hr>
+	<h3>Zeitrafferaufnahme einrichten</h3>
+	<p>PLATZHALTER Eingabeformular</p>
+    <ul>
+        <li>Gesamtdauer (dropdown)</li>
+        <li>Intervall</li>
+        <li>Aufloesung</li>
+        <li>Infrarot von x bis y Uhr; Sonderfaelle x=0 und y=24 -> immer; x=0 und y=0 -> nie</li>
+    </ul>
+	<button type="button">Neue Einstellungen uebernehmen</button>
+    <p>PLATZHALTER aktuelle Einstellungen</p>
+    <p>Status Kameraaufnahme: AN oder AUS -> STOP?</p>
+	<hr>
+    <p>PLATZHALTER Dateibrowser)</p>
+    <ul>
+        <li>Zeitrafferaufnahmen</li>
+        <li>Sensoraufzeichnungen</li>
+	<hr>
+	<h3>Live-Vorschau fuer die Kamera</h3>
+	<p>Um die Blickrichtung der Kamera einzustellen und zu fokussieren, die Live Vorschau anschalten. Danach die Kamera manuell ausrichten und durch vorsichtiges Drehen der Linse den Fokuspunkt einstellen.</p>
+	<a href="livepage">Live-Vorschau</a>
+    <hr>
+    <p>@2023 - {{ nowtime }}</p>
+  </body>
+</html>
