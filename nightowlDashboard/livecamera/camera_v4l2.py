@@ -2,7 +2,7 @@ import io
 from PIL import Image
 import select
 import v4l2capture
-from base_camera import BaseCamera
+from .base_camera import BaseCamera
 
 
 class Camera(BaseCamera):
