@@ -5,18 +5,18 @@ from flask import Flask, render_template, Response, redirect, request
 import time
 
 # import temp/hum sensor driver
-from .drv.aht20driver import AHT20
+from drv.aht20driver import AHT20
 aht20sens = AHT20()
 
 # import LED driver
-from .drv.LEDdriver import IReyes
+from drv.LEDdriver import IReyes
 redeyes = IReyes()
 
 # import camera driver
 if os.environ.get('CAMERA'):
-    Camera = import_module('.livecamera.camera_' + os.environ['CAMERA']).Camera
+    Camera = import_module('livecamera.camera_' + os.environ['CAMERA']).Camera
 else:
-    from .livecamera.camera_dummy import Camera
+    from livecamera.camera_dummy import Camera
 
 # Raspberry Pi camera module (requires picamera package)
 # from camera_pi import Camera
