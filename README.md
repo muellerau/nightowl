@@ -14,8 +14,9 @@ I built this for a family member so they can observe plant growth at night and d
 
 ## Dashboard Dependencies
  - Python modules: ```flask``` (and dependencies) ```picamera``` (or camera specific module, see M. Grinberg's driver below) ```smbus2```
- - Miguel Grinberg's camera live streaming driver
-https://github.com/miguelgrinberg/flask-video-streaming/
+
+
+The dashboard incorporates Miguel Grinberg's camera live streaming driver (https://github.com/miguelgrinberg/flask-video-streaming/) with minor adjustments.
 
 
 
