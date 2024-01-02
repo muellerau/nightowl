@@ -10,29 +10,34 @@ class Timelapse:
         self._movie_framerate = 24
         self._tinterval = ()
     
-    def start(self, camresolution: tuple = (1280, 720), camiso: int = 0, ir_light: bool = False) -> None:
+    def set_cam_param(self, camresolution: tuple = (1280, 720), camiso: int = 0, ir_light: bool = False) -> None:
+        # collect parameters
+        self._cam_settings = {
+            'camresolution': camresolution,
+            #'camframerate': camframerate, # not in use
+            'camiso': camiso,
+            'ir_light': ir_light
+        }
+    
+    def start(self) -> None:
     #def start(self, camresolution: tuple = (1280, 720), camframerate: int = 30, camiso: int = 0, ir_light: bool = False) -> None:
         self._running = True
         if not self._tinterval:
             self.set_interval()
+        if not self._cam_settings:
+            self.set_cam_param()
         #if camframerate < self._movie_framerate or camframerate > 60:
         #    print("WARNING: camera framerate may not be lower than 24 or greater than 60. Using default of 30.")
         #    camframerate = self._movie_framerate
         
-        # Wait here for start
+        # Wait for start
         while self._running and self._tinterval[0] < (datetime.now().hour + datetime.now().minute / 60):
             sleep(1)
         
         # Initialize camera variables for fixed exposure settings
         self._cam_shut_speed = None
         self._cam_awb_gains = None
-        # collect parameters
-        self._cam_settings = {
-            'camresolution': camresolution,
-            #'camframerate': camframerate,
-            'camiso': camiso,
-            'ir_light': ir_light
-        }
+        
         if ir_light:
             self._cameyes = IReyes()
         # main working area
@@ -120,7 +125,7 @@ class Timelapse:
         return self._tinterval
     
     @property
-    def get_settings(self):
+    def get_cam_settings(self):
         if self._cam_settings:
             return self._cam_settings
         else:
