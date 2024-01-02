@@ -10,13 +10,14 @@ class Timelapse:
         self._movie_framerate = 24
         self._tinterval = ()
     
-    def set_cam_param(self, camresolution: tuple = (1280, 720), camiso: int = 0, ir_light: bool = False) -> None:
+    def set_cam_param(self, camresolution: tuple = (1280, 720), camiso: int = 0, ir_light: bool = False, tmp_dir: str = 'tmp') -> None:
         # collect parameters
         self._cam_settings = {
             'camresolution': camresolution,
             #'camframerate': camframerate, # not in use
             'camiso': camiso,
-            'ir_light': ir_light
+            'ir_light': ir_light,
+            'tmp_dir': tmp_dir
         }
     
     def start(self) -> None:
@@ -72,7 +73,7 @@ class Timelapse:
                     camera.awb_mode = 'off'
                     camera.awb_gains = self._cam_awb_gains
                 # Capture image
-                camera.capture(str('img_{timestamp:%Y-%m-%d-%H-%M}_'+str(counter).zfill(4)+'.jpg', format = 'jpeg', thumbnail = None, bayer = True)
+                camera.capture(self._cam_settings['tmp_dir']+'/img_{timestamp:%Y-%m-%d-%H-%M}_'+str(counter).zfill(4)+'.jpg', format = 'jpeg', thumbnail = None, bayer = True)
                 counter += 1
             if self._cam_settings['ir_light']:
                 self._cameyes.turn_off()
@@ -98,7 +99,7 @@ class Timelapse:
                 camera.awb_mode = 'off'
                 camera.awb_gains = self._cam_awb_gains
             # Capture images continuously with small delays
-            for image in camera.capture_continous('img_{timestamp:%Y-%m-%d-%H-%M}_{counter:04d}.jpg', format = 'jpeg', thumbnail = None, bayer = True):
+            for image in camera.capture_continous(self._cam_settings['tmp_dir']+'/img_{timestamp:%Y-%m-%d-%H-%M}_{counter:04d}.jpg', format = 'jpeg', thumbnail = None, bayer = True):
                 self._wait()
         if self._cam_settings['ir_light']:
             self._cameyes.turn_off()
