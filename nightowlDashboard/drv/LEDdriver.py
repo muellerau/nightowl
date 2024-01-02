@@ -13,10 +13,19 @@ class IReyes:
         self._state = 0
 
     def toggle(self) -> None:
-        self._state = 1
         for p in IR_LED_PINS:
             GPIO.output(p, not GPIO.input(p))
             self._state = self._state & GPIO.input(p)
+
+    def turn_on(self) -> None:
+        self._state = 1
+        for p in IR_LED_PINS:
+            GPIO.output(p, 1)
+
+    def turn_off(self) -> None:
+        self._state = 0
+        for p in IR_LED_PINS:
+            GPIO.output(p, 0)
 
     def cleanup(self) -> None:
         GPIO.cleanup()
