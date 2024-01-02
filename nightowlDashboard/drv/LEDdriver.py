@@ -11,12 +11,15 @@ class IReyes:
         for p in IR_LED_PINS:
             GPIO.setup(p, GPIO.OUT)
         self._state = 0
-    
+
     def toggle(self) -> None:
         self._state = 1
         for p in IR_LED_PINS:
             GPIO.output(p, not GPIO.input(p))
             self._state = self._state & GPIO.input(p)
+
+    def cleanup(self) -> None:
+        GPIO.cleanup()
 
     @property
     def status(self):
