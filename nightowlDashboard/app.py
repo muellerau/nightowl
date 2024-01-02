@@ -52,7 +52,7 @@ def livepage():
 @app.route('/timelapse')
 def tlpage():
     """Timelapse configuration page."""
-    return return redirect('/')
+    return redirect('/timelapse.html')
 
 def gen(camera):
     """Video streaming generator function."""
