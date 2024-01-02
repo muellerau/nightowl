@@ -8,14 +8,13 @@
   </head>
   <body>
     <h1>Nachteule Infrarot Kamera - Live</h1>
-    <h3><img src="{{ url_for('video_feed') }}" width="100%"></h3>
-	<hr>
-	<p>Infrarotlichter sind {%if IRstate %} AN {% else %} AUS {% endif %}.</p>
-	<form action="/toggle_lights/" method="post">
-		<button name="switchledBtn" type="submit">Ein-/Ausschalten</button>
-	</form>
-	<hr>
-	<a href="/">Zur Startseite</a>
+    <p>Infrarotlichter sind {%if IRstate %} AN {% else %} AUS {% endif %}.</p>
+    <form action="/toggle_lights/" method="post">
+        <button name="switchledBtn" type="submit">Ein-/Ausschalten</button>
+    </form>
+    <a href="/">Zur Startseite</a>
+    <hr>
+        <h3><img src="{{ url_for('video_feed') }}" width="100%"></h3>
     <hr>
     <p>@2023 - {{ nowtime }}</p>
   </body>
