@@ -1,42 +1,43 @@
-<!--
-   index.html
--->
-
 <!DOCTYPE html>
 <html lang="de">
-  <head>
-    <title>Nachteule</title>
-  </head>
-  <body>
-    <h1>Nachteule Dashboard</h1>
-    <hr>
-	<h3>Sensordaten</h3>
-	<p>Temperatur: {{ temp }} &deg;C</p>
-	<p>Rel. Luftfeuchte: {{ hum }} %</p>
-	<a href="/">Aktualisieren</a>
-	<hr>
-	<h3>Zeitrafferaufnahme einrichten</h3>
-	<p>PLATZHALTER Eingabeformular</p>
-    <ul>
-        <li>Gesamtdauer (dropdown)</li>
-        <li>Intervall</li>
-        <li>Aufloesung</li>
-        <li>Infrarot von x bis y Uhr; Sonderfaelle x=0 und y=24 -> immer; x=0 und y=0 -> nie</li>
-    </ul>
-	<button type="button">Neue Einstellungen uebernehmen</button>
-    <p>PLATZHALTER aktuelle Einstellungen</p>
-    <p>Status Kameraaufnahme: AN oder AUS -> STOP?</p>
-	<hr>
-    <p>PLATZHALTER Dateibrowser)</p>
-    <ul>
-        <li>Zeitrafferaufnahmen</li>
-        <li>Sensoraufzeichnungen</li>
-    </ul>
-	<hr>
-	<h3>Live-Vorschau fuer die Kamera</h3>
-	<p>Um die Blickrichtung der Kamera einzustellen und zu fokussieren, die Live Vorschau anschalten. Danach die Kamera manuell ausrichten und durch vorsichtiges Drehen der Linse den Fokuspunkt einstellen.</p>
-	<a href="livepage">Live-Vorschau</a>
-    <hr>
-    <p>@2023 - {{ nowtime }}</p>
-  </body>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nachteule Dashboard</title>
+  <!-- Link to external CSS file -->
+  <link rel="stylesheet" href="static/styles.css">
+  
+  <script>
+    function toggleMenu() {
+      var x = document.getElementById("myNavbar");
+      if (x.className === "navbar") {
+        x.className += " responsive";
+      } else {
+        x.className = "navbar";
+      }
+    }
+  </script>
+</head>
+
+<body>
+
+  <!-- Page Header -->
+  <div class="header">
+    <h2>Nachteule</h2>
+  </div>
+
+  <!-- Navigation Bar -->
+  <div class="navbar" id="myNavbar">
+    <a href="/">Übersicht</a>
+    <a href="/timelapse">Zeitraffer</a>
+    <a href="/livepage">Live</a>
+    <!--  <a href="javascript:void(0);" class="icon" onclick="toggleMenu()">&#9776;</a> -->
+  </div>
+
+  <!-- Content Section -->
+  {% include content %}
+
+</body>
+
 </html>

@@ -34,7 +34,7 @@ def index():
         'temp': round(aht20sens.temperature, 1),
         'hum': round(aht20sens.humidity, 1)
     }
-    return render_template('index.html', **templateData)
+    return render_template('index.html', content = 'landing.html', **templateData)
 
 @app.route('/livepage')
 def livepage():
@@ -47,7 +47,12 @@ def livepage():
         'nowtime': time.ctime(),
         'IRstate': irstate
     }
-    return render_template('livepage.html', **templateData)
+    return render_template('index.html', content = 'livepage.html', **templateData)
+
+@app.route('/timelapse')
+def tlpage():
+    """Timelapse configuration page."""
+    return return redirect('/')
 
 def gen(camera):
     """Video streaming generator function."""

@@ -115,14 +115,18 @@ class Timelapse:
             self._stop()
         sleep(self._tinterval[2])
 
-@property
+    @property
     def current_interval(self) -> tuple:
         return self._tinterval
     
-@property
+    @property
     def get_settings(self):
         if self._cam_settings:
             return self._cam_settings
         else:
             print("No settings defined.")
             return 1
+    
+    @property
+    def status(self) -> bool:
+        return self._running
