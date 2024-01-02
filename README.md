@@ -13,7 +13,7 @@ I built this for a family member so they can observe plant growth at night and d
  - 3D printed models
 
 ## Dashboard Dependencies
- - Python modules: ```flask``` ```picamera``` ```smbus2```
+ - Python modules: ```flask``` (and dependencies) ```picamera``` (or camera specific module, see M. Grinberg's driver below) ```smbus2```
  - Miguel Grinberg's camera live streaming driver
 https://github.com/miguelgrinberg/flask-video-streaming/
 
