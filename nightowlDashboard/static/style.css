@@ -6,9 +6,9 @@ body {
 }
 
 /* Video Feed */
-.livestream {
-    width: 100%;
-    max-width: 768px;
+#livestream img {
+    max-width: 100%;
+    height: auto;
 }
 
 

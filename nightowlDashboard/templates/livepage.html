@@ -3,13 +3,13 @@
 -->
 <div class="content">
   <h3>Nachteule Infrarot Kamera - Live</h3>
-  <p>Infrarotlichter sind {%if IRstate %} AN {% else %} AUS {% endif %}.</p>
+  <p>Infrarotlichter sind {%if IRstate %}AN{% else %}AUS{% endif %}.</p>
   <form action="/toggle_lights/" method="post">
       <button name="switchledBtn" type="submit">Ein-/Ausschalten</button>
   </form>
   <a href="/">Zur Startseite</a>
   <hr>
-      <div><img src="{{ url_for('video_feed') }}" class="livefeed"></div>
+      <div id="livestream"><img src="{{ url_for('video_feed') }}"></div>
   <hr>
   <p>@2023 - {{ nowtime }}</p>
 </div>
