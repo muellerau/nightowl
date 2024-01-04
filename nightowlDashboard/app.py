@@ -2,7 +2,7 @@
 
 from importlib import import_module
 import os
-from flask import Flask, render_template, Response, redirect, request
+from flask import Flask, render_template, Response, redirect, request, url_for#, send_from_directory
 import time
 
 # import temp/hum sensor driver
@@ -40,21 +40,7 @@ def index():
     }
     return render_template('index.html', content = 'landing.html', **templateData)
 
-@app.route('/livepage', methods = ['GET', 'POST'])
-def livepage():
-    """Video streaming page."""
-    templateData = {
-        'nowtime': time.ctime(),
-        'IRstate': bool(redeyes.status),
-        'camstatus': timelapse_c.status
-    }
-    if request.method == 'POST':
-        if request.form.get('IRled_state') == 'IRon':
-            redeyes.turn_on()
-        elif request.form.get('IRled_state') == 'IRoff':
-            redeyes.turn_off()
-    return render_template('index.html', content = 'livepage.html', **templateData)
-
+# Timelapse
 @app.route('/timelapse', methods = ['GET', 'POST'])
 def tlpage():
     """Timelapse configuration page."""
@@ -72,7 +58,7 @@ def tlpage():
             templateData['camsettings'] = timelapse_c.cam_settings
         elif 'preview' in request.form:
             # capture preview
-            templateData['preview_img'] = timelapse_c.capture_preview()
+            templateData['preview_img'] = url_for('static', filename = timelapse_c.capture_preview())
         elif 'abort' in request.form:
             # abort timelapse
             timelapse_c.stop()
@@ -81,6 +67,11 @@ def tlpage():
         pass
     return render_template('index.html', content = 'timelapse.html', **templateData)
 
+#@app.route('/<folder>/images/<filename>')
+#def get_image(folder, filename):
+#    return send_from_directory(folder, filename)
+
+# Live Video Feed
 def gen(camera):
     """Video streaming generator function."""
     yield b'--frame\r\n'
@@ -88,12 +79,25 @@ def gen(camera):
         frame = camera.get_frame()
         yield b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n--frame\r\n'
 
-
 @app.route('/video_feed')
 def video_feed():
     """Video streaming route. Link this URL in the src attribute of an img tag."""
     return Response(gen(Camera()), mimetype='multipart/x-mixed-replace; boundary=frame')
 
+@app.route('/livepage', methods = ['GET', 'POST'])
+def livepage():
+    """Video streaming page."""
+    templateData = {
+        'nowtime': time.ctime(),
+        'IRstate': bool(redeyes.status),
+        'camstatus': timelapse_c.status
+    }
+    if request.method == 'POST':
+        if request.form.get('IRled_state') == 'IRon':
+            redeyes.turn_on()
+        elif request.form.get('IRled_state') == 'IRoff':
+            redeyes.turn_off()
+    return render_template('index.html', content = 'livepage.html', **templateData)
 
 @app.route("/toggle_lights/", methods = ['POST'])
 def toggle_lights():

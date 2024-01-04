@@ -4,6 +4,7 @@ from time import sleep
 from picamera import PiCamera
 from datetime import datetime, timedelta
 from drv.LEDdriver import IReyes
+import os
 
 class Timelapse:
     def __init__(self) -> None:
@@ -30,7 +31,11 @@ class Timelapse:
             self._cam_shut_speed = None
             self._cam_awb_gains = None
             
-            prev_img = self._cam_settings['tmp_dir']+'/preview_{timestamp:%Y-%m-%d-%H-%M}.jpg'
+            tnow = datetime.now()
+            
+            app_cwd = os.getcwd() + '/static/'
+            
+            prev_img = app_cwd + self._cam_settings['tmp_dir']+'/preview_'+ tnow.strftime('%y-%m-%d-%H-%M-%S') +'.jpg'
             
             if self._cam_settings['ir_light']:
                 self._cameyes = IReyes()
@@ -40,16 +45,16 @@ class Timelapse:
                 if self._cam_settings['camiso']: # if ISO is set, fix camera exposure
                     self._fix_cam_exp(camera)
                 else:
-                    sleep(1)
+                    camera.start_preview()
+                    sleep(2)
                 camera.capture(prev_img, format = 'jpeg', thumbnail = None, bayer = True)
                 
             if self._cam_settings['ir_light']:
                 self._cameyes.turn_off()
-                self._cameyes.cleanup()
-            return prev_img
+                #self._cameyes.cleanup() # will interfere with app.py calls...
+            return prev_img.replace(app_cwd, '')
     
     def start(self) -> None:
-    #def start(self, camresolution: tuple = (1280, 720), camframerate: int = 30, camiso: int = 0, ir_light: bool = False) -> None:
         self._running = True
         #if camframerate < self._movie_framerate or camframerate > 60:
         #    print("WARNING: camera framerate may not be lower than 24 or greater than 60. Using default of 30.")
@@ -73,8 +78,8 @@ class Timelapse:
         # make timelapse movie
         self._combine_shots_to_movie()
         # cleanup GPIO resources
-        if self._cam_settings['ir_light']:
-            self.cameyes.cleanup()
+        #if self._cam_settings['ir_light']:
+        #    self.cameyes.cleanup() # will interfere with app.py calls...
     
     def _fix_cam_exp(self, camera):
         if camera:
