@@ -49,12 +49,10 @@ def livepage():
         'camstatus': timelapse_c.status
     }
     if request.method == 'POST':
-        redeyes = IReyes()
         if request.form.get('IRled_state') == 'IRon':
             redeyes.turn_on()
         elif request.form.get('IRled_state') == 'IRoff':
             redeyes.turn_off()
-        redeyes.cleanup()
     return render_template('index.html', content = 'livepage.html', **templateData)
 
 @app.route('/timelapse', methods = ['GET', 'POST'])

@@ -3,9 +3,10 @@
 -->
 <div class="content">
   <h3>Nachteule Infrarot Kamera - Live</h3>
+  {{ camstatus }}
   {% if camstatus %}
     <p>Zeitrafferaufnahme läuft! Keine Live-Vorschau möglich.</p>
-  (% else %)
+  {% else %}
   <p>Infrarotlichter sind {%if IRstate %}AN{% else %}AUS{% endif %}.</p>
   <form method="post">
     {%if IRstate %}
