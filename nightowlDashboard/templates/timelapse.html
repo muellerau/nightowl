@@ -20,9 +20,9 @@
   <div>
     <h3>Neue Zeitrafferkonfiguration</h3>
       <form method="post">
-        {% for key in camsettings.keys() %}
+        {% for key, value in camsettings.items() %}
           <label for="{{ key }}">{{ key }}</label>
-          <input type="text" id="{{ key }}" name="{{ key }}" value="" required>
+          <input type="text" id="{{ key }}" name="{{ key }}" value="{{ value }}" required>
           <br>
         {% endfor %}
         <input type="submit" name="camsetter" value="Neue Einstellungen übernehmen">
