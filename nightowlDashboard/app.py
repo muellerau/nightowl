@@ -11,6 +11,7 @@ aht20sens = AHT20()
 
 # import LED driver
 from drv.LEDdriver import IReyes
+redeyes = IReyes()
 
 # import timelapse module
 from fnc.timelapse import Timelapse
@@ -42,13 +43,10 @@ def index():
 @app.route('/livepage')
 def livepage():
     """Video streaming page."""
-    if redeyes.status:
-        irstate = True
-    else:
-        irstate = False
     templateData = {
         'nowtime': time.ctime(),
-        'IRstate': irstate
+        'IRstate': bool(redeyes.status),
+        'camstatus': timelapse_c.status
     }
     return render_template('index.html', content = 'livepage.html', **templateData)
 

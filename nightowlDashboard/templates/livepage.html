@@ -3,6 +3,9 @@
 -->
 <div class="content">
   <h3>Nachteule Infrarot Kamera - Live</h3>
+  {% if camstatus %}
+    <p>Zeitrafferaufnahme läuft! Keine Live-Vorschau möglich.</p>
+  (% else %)
   <p>Infrarotlichter sind {%if IRstate %}AN{% else %}AUS{% endif %}.</p>
   <form method="post">
     {%if IRstate %}
@@ -11,9 +14,9 @@
       <button name="IRled_state" type="submit" value="IRoff">Einschalten</button>
     {% endif %}
   </form>
-  <a href="/">Zur Startseite</a>
   <hr>
       <div id="livestream"><img src="{{ url_for('video_feed') }}"></div>
   <hr>
+  {% endif %}
   <p>@2023 - {{ nowtime }}</p>
 </div>
