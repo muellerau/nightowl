@@ -3,14 +3,14 @@
 from time import sleep
 from picamera import PiCamera
 from datetime import datetime, timedelta
-from ..drv.LEDdriver import IReyes
+from drv.LEDdriver import IReyes
 
 class Timelapse:
     def __init__(self) -> None:
         self._movie_framerate = 24
         # initialize defaults
         self.set_interval()
-        self.set_cam_param()
+        self.set_cam_params()
     
     def set_cam_params(self, camresolution: tuple = (1280, 720), camiso: int = 0, ir_light: bool = False, tmp_dir: str = 'tmp', mov_dir: str = 'mov') -> None:
         # collect parameters
