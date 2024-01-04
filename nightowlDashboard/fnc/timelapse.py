@@ -32,7 +32,7 @@ class Timelapse:
             
             prev_img = self._cam_settings['tmp_dir']+'/preview_{timestamp:%Y-%m-%d-%H-%M}.jpg'
             
-            if self._cam_settings['irlight']:
+            if self._cam_settings['ir_light']:
                 self._cameyes = IReyes()
                 self._cameyes.turn_on()
             
@@ -43,7 +43,7 @@ class Timelapse:
                     sleep(1)
                 camera.capture(prev_img, format = 'jpeg', thumbnail = None, bayer = True)
                 
-            if self._cam_settings['irlight']:
+            if self._cam_settings['ir_light']:
                 self._cameyes.turn_off()
                 self._cameyes.cleanup()
             return prev_img
@@ -63,7 +63,7 @@ class Timelapse:
         self._cam_shut_speed = None
         self._cam_awb_gains = None
         
-        if self._cam_settings['irlight']:
+        if self._cam_settings['ir_light']:
             self._cameyes = IReyes()
         # main working area
         if self._tinterval[3] >= 120:
@@ -73,7 +73,7 @@ class Timelapse:
         # make timelapse movie
         self._combine_shots_to_movie()
         # cleanup GPIO resources
-        if self._cam_settings['irlight']:
+        if self._cam_settings['ir_light']:
             self.cameyes.cleanup()
     
     def _fix_cam_exp(self, camera):
