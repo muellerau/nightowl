@@ -32,9 +32,7 @@ class Timelapse:
             self._cam_awb_gains = None
             
             tnow = datetime.now()
-            
             app_cwd = os.getcwd() + '/static/'
-            
             prev_img = app_cwd + self._cam_settings['tmp_dir']+'/preview_'+ tnow.strftime('%y-%m-%d-%H-%M-%S') +'.jpg'
             
             if self._cam_settings['ir_light']:
