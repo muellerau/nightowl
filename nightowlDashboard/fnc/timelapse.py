@@ -7,6 +7,7 @@ from drv.LEDdriver import IReyes
 
 class Timelapse:
     def __init__(self) -> None:
+        self._running = False
         self._movie_framerate = 24
         # initialize defaults
         self.set_interval()
