@@ -11,7 +11,10 @@ aht20sens = AHT20()
 
 # import LED driver
 from drv.LEDdriver import IReyes
-redeyes = IReyes()
+
+# import timelapse module
+from fnc.timelapse import Timelapse
+timelapse_c = Timelapse()
 
 # import camera driver
 if os.environ.get('CAMERA'):
@@ -49,9 +52,29 @@ def livepage():
     }
     return render_template('index.html', content = 'livepage.html', **templateData)
 
-@app.route('/timelapse')
+@app.route('/timelapse', methods = ['GET', 'POST'])
 def tlpage():
     """Timelapse configuration page."""
+    if request.method == 'POST':
+        # handle form input
+        if 'camsetter' in request.form:
+            # new cam settings
+            new_cam_settings = {k:request.form.get(k) for k in timelapse_c.cam_settings}
+            timelapse_c.set_cam_params(**new_cam_settings)
+        elif 'preview' in request.form:
+            # capture preview
+            preview_img = timelapse_c.preview()
+        elif 'abort' in request.form:
+            # abort timelapse
+            timelapse_c.stop()
+    else:
+        # whatever
+        pass
+    templateData = {
+        'camsettings': timelapse_c.cam_settings,
+        'camstatus': timelapse_c.status,
+        'preview_img': preview_img
+    }
     return render_template('index.html', content = 'timelapse.html', **templateData)
 
 def gen(camera):
@@ -62,14 +85,20 @@ def gen(camera):
         yield b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n--frame\r\n'
 
 
-@app.route('/video_feed')
+@app.route('/video_feed', methods = ['GET', 'POST'])
 def video_feed():
     """Video streaming route. Link this URL in the src attribute of an img tag."""
-    return Response(gen(Camera()),
-                    mimetype='multipart/x-mixed-replace; boundary=frame')
+    if request.method == 'POST':
+        redeyes = IReyes()
+        if request.form.get('IRled_state') == 'IRon':
+            redeyes.turn_on()
+        elif request.form.get('IRled_state') == 'IRoff':
+            redeyes.turn_off()
+        redeyes.cleanup()
+    return Response(gen(Camera()), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
-@app.route("/toggle_lights/", methods=['POST'])
+@app.route("/toggle_lights/", methods = ['POST'])
 def toggle_lights():
     redeyes.toggle()
     return redirect(request.referrer)

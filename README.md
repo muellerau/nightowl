@@ -6,7 +6,7 @@ I built this for a family member so they can observe plant growth at night and d
 ## Materials
 
  - Raspberry Pi Zero W (or better Zero 2 W)
- - microSD card (64 GB or greater ! double check !)
+ - microSD card (32 GB or greater recommended)
  - Camera with IR LEDs (! need to look up exact model !)
  - Adafruit AHT20 temperature and humidity sensor
  - power bank (>10 Ah recommended)

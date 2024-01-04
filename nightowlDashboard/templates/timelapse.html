@@ -1,15 +1,41 @@
 <!--
    timelapse.html
 -->
+
 <div class="content">
   <div>
-  <div>
     <h3>Aktuelle Zeitrafferkonfiguration</h3>
-    <p>placeholder</p>
+      {% for key, value in camsettings.items() %}
+        <p>{{ key }}: {{ value }}</p>
+      {% endfor %}
   </div>
-    <h3>Neue Zeitrafferkonfiguration eingeben</h3>
-    <a href="#">Neue Einstellungen uebernehmen</a>
+  {% if camstatus %}
+  <div>
+    <h3>Zeitrafferaufnahme läuft!</h3>
+    <form method="post">
+      <button name="abort" type="submit" value="abort">Aufnahme stoppen</button>
+    </form>
   </div>
+  {% else %}
+  <div>
+    <h3>Neue Zeitrafferkonfiguration</h3>
+      <form method="post">
+        {% for key in camsettings.keys() %}
+          <label for="{{ key }}">{{ key }}</label>
+          <input type="text" id="{{ key }}" name="{{ key }}" value="" required>
+          <br>
+        {% endfor %}
+        <input type="submit" name="camsetter" value="Neue Einstellungen übernehmen">
+      </form>
+  </div>
+  <div>
+    <h3>Vorschau</h3>
+    {% if preview_img %}<img src="{{ preview_img }}">{% endif %}
+    <form method="post">
+      <button name="preview" type="submit" value="preview">Vorschaubild aufnehmen</button>
+    </form>
+  </div>
+  {% endif %}
   <hr>
   <div>
     <h3>Gespeicherte Zeitrafferaufnahmen</h3>

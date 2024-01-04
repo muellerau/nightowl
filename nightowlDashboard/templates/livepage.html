@@ -4,8 +4,12 @@
 <div class="content">
   <h3>Nachteule Infrarot Kamera - Live</h3>
   <p>Infrarotlichter sind {%if IRstate %}AN{% else %}AUS{% endif %}.</p>
-  <form action="/toggle_lights/" method="post">
-      <button name="switchledBtn" type="submit">Ein-/Ausschalten</button>
+  <form method="post">
+    {%if IRstate %}
+      <button name="IRled_state" type="submit" value="IRon">Ausschalten</button>
+    {% else %}
+      <button name="IRled_state" type="submit" value="IRoff">Einschalten</button>
+    {% endif %}
   </form>
   <a href="/">Zur Startseite</a>
   <hr>
