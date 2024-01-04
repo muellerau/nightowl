@@ -53,26 +53,27 @@ def livepage():
 @app.route('/timelapse', methods = ['GET', 'POST'])
 def tlpage():
     """Timelapse configuration page."""
+    templateData = {
+        'camsettings': timelapse_c.cam_settings,
+        'camstatus': timelapse_c.status,
+        'preview_img': None
+    }
     if request.method == 'POST':
         # handle form input
         if 'camsetter' in request.form:
             # new cam settings
             new_cam_settings = {k:request.form.get(k) for k in timelapse_c.cam_settings}
             timelapse_c.set_cam_params(**new_cam_settings)
+            templateData['camsettings'] = timelapse_c.cam_settings
         elif 'preview' in request.form:
             # capture preview
-            preview_img = timelapse_c.preview()
+            templateData['preview_img'] = timelapse_c.preview()
         elif 'abort' in request.form:
             # abort timelapse
             timelapse_c.stop()
     else:
         # whatever
         pass
-    templateData = {
-        'camsettings': timelapse_c.cam_settings,
-        'camstatus': timelapse_c.status,
-        'preview_img': preview_img
-    }
     return render_template('index.html', content = 'timelapse.html', **templateData)
 
 def gen(camera):
