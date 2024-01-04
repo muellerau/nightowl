@@ -5,6 +5,7 @@ import os
 from flask import Flask, render_template, Response, redirect, request, url_for#, send_from_directory
 import time
 from datetime import datetime
+from threading import Thread
 
 # import temp/hum sensor driver
 from drv.aht20driver import AHT20
@@ -93,7 +94,8 @@ def tlpage():
             timelapse_c.stop()
         elif 'lapse_start' in request.form:
             # start timelapse
-            timelapse_c.start()
+            lapse_thread = Thread(timelapse_c.start(), args=[])
+            lapse_thread.start()
     else:
         # whatever
         pass
