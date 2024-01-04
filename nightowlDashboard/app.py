@@ -95,8 +95,10 @@ def livepage():
     if request.method == 'POST':
         if request.form.get('IRled_state') == 'IRon':
             redeyes.turn_on()
+            templateData['IRstate'] = bool(redeyes.status)
         elif request.form.get('IRled_state') == 'IRoff':
             redeyes.turn_off()
+            templateData['IRstate'] = bool(redeyes.status)
     return render_template('index.html', content = 'livepage.html', **templateData)
 
 @app.route("/toggle_lights/", methods = ['POST'])
