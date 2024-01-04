@@ -13,8 +13,9 @@ class Timelapse:
         # initialize defaults
         self.set_interval()
         self.set_cam_params()
+        self._app_cwd = os.getcwd() + '/static/'
     
-    def set_cam_params(self, camresolution: tuple = (1280, 720), camiso: int = 0, ir_light: bool = False, tmp_dir: str = 'tmp', mov_dir: str = 'mov') -> None:
+    def set_cam_params(self, camresolution: str = '1280x720', camiso: int = 0, ir_light: bool = False, tmp_dir: str = 'tmp', mov_dir: str = 'mov') -> None:
         # collect parameters
         self._cam_settings = {
             'camresolution': camresolution,
@@ -32,8 +33,7 @@ class Timelapse:
             self._cam_awb_gains = None
             
             tnow = datetime.now()
-            app_cwd = os.getcwd() + '/static/'
-            prev_img = app_cwd + self._cam_settings['tmp_dir']+'/preview_'+ tnow.strftime('%y-%m-%d-%H-%M-%S') +'.jpg'
+            prev_img = self._app_cwd + self._cam_settings['tmp_dir']+'/preview_'+ tnow.strftime('%y-%m-%d-%H-%M-%S') +'.jpg'
             
             if self._cam_settings['ir_light']:
                 self._cameyes = IReyes()
@@ -50,7 +50,7 @@ class Timelapse:
             if self._cam_settings['ir_light']:
                 self._cameyes.turn_off()
                 #self._cameyes.cleanup() # will interfere with app.py calls...
-            return prev_img.replace(app_cwd, '')
+            return prev_img.replace(self._app_cwd, '')
     
     def start(self) -> None:
         self._running = True
@@ -60,6 +60,7 @@ class Timelapse:
         
         # Wait for start
         while self._running and (self._tinterval[0] - datetime.now()).total_seconds() > 0:
+            print("waiting for start")
             sleep(1)
         
         # Initialize/reset camera variables for fixed exposure settings
@@ -69,7 +70,7 @@ class Timelapse:
         if self._cam_settings['ir_light']:
             self._cameyes = IReyes()
         # main working area
-        if self._tinterval[3] >= 120:
+        if self._tinterval[2] >= 120:
             self._slow_capture() # handle large capture intervals individually
         else:
             self._fast_capture() # intervals less than 5s can be handled by continuous capture
@@ -104,10 +105,10 @@ class Timelapse:
                 self._cameyes.turn_on()
                 sleep(1)
             with PiCamera(resolution = self._cam_settings['camresolution']) as camera:
-                if self._cam_settings['camiso']: # if ISO is set, fix camera exposure
+                if self._cam_settings['camiso'] > 0: # if ISO is set, fix camera exposure
                     self._fix_cam_exp(camera)
                 # Capture image
-                camera.capture(self._cam_settings['tmp_dir']+'/img_{timestamp:%Y-%m-%d-%H-%M}_'+str(counter).zfill(6)+'.jpg', format = 'jpeg', thumbnail = None, bayer = False)
+                camera.capture(self._app_cwd + self._cam_settings['tmp_dir']+'/timelapse_frame_'+str(counter).zfill(6)+'.jpg', format = 'jpeg', thumbnail = None, bayer = False)
                 counter += 1
             if self._cam_settings['ir_light']:
                 self._cameyes.turn_off()
@@ -121,7 +122,7 @@ class Timelapse:
             if self._cam_settings['camiso']: # if ISO is set, fix camera exposure
                 self._fix_cam_exp(camera)
             # Capture images continuously with small delays
-            for image in camera.capture_continous(self._cam_settings['tmp_dir']+'/img_{timestamp:%Y-%m-%d-%H-%M}_{counter:06d}.jpg', format = 'jpeg', thumbnail = None, bayer = False):
+            for image in camera.capture_continous(self._app_cwd + self._cam_settings['tmp_dir']+'/timelapse_frame_{counter:06d}.jpg', format = 'jpeg', thumbnail = None, bayer = False):
                 self._wait()
         if self._cam_settings['ir_light']:
             self._cameyes.turn_off()

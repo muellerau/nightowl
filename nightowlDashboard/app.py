@@ -4,6 +4,7 @@ from importlib import import_module
 import os
 from flask import Flask, render_template, Response, redirect, request, url_for#, send_from_directory
 import time
+from datetime import datetime
 
 # import temp/hum sensor driver
 from drv.aht20driver import AHT20
@@ -44,24 +45,55 @@ def index():
 @app.route('/timelapse', methods = ['GET', 'POST'])
 def tlpage():
     """Timelapse configuration page."""
+    lapse_interval = timelapse_c.current_interval
     templateData = {
         'camsettings': timelapse_c.cam_settings,
+        'lapse_interval': (lapse_interval[0].hour + lapse_interval[0].minute / 60, lapse_interval[1], lapse_interval[2]),
+        'lapse_interval_text': ('Start', 'Dauer (in Stunden)', 'acc-Faktor'),
         'camstatus': timelapse_c.status,
-        'preview_img': None
+        'preview_img': None,
+        'camresolution_options': {'1920x1080 (FullHD 16:9)':'1920x1080',
+                                    '1440x1080 (4:3)':'1440x1080',
+                                    '1366x768 (WXGA 16:9)':'1366x768',
+                                    '1024x768 (XGA 4:3)':'1024x768',
+                                    '1280x720 (HD 16:9)':'1280x720',
+                                    '960x720 (4:3)':'960x720',
+                                    '1024x600 (WSVGA 16:9)':'1024x600',
+                                    '800x600 (SVGA 4:3)':'800x600',
+                                    '854x480 (FWVGA 16:9)':'854x480',
+                                    '640x480 (VGA 4:3)':'640x480',
+                                    '480x320 (HVGA 3:2)':'480x320',
+                                    '320x240 (QVGA 4:3)':'320x240'
+                                 },
+        'camiso_options': (0,50,100,200,300,400,500,600,800,1000)
     }
     if request.method == 'POST':
         # handle form input
         if 'camsetter' in request.form:
             # new cam settings
-            new_cam_settings = {k:request.form.get(k) for k in timelapse_c.cam_settings}
-            timelapse_c.set_cam_params(**new_cam_settings)
+            timelapse_c.set_cam_params(camresolution = request.form.get('camresolution'),
+                camiso = int(request.form.get('camiso')),
+                ir_light = (request.form.get('ir_light') == 'True'),
+                tmp_dir = request.form.get('tmp_dir'),
+                mov_dir = request.form.get('mov_dir')
+                )
+            #new_cam_settings = {k:request.form.get(k) for k in timelapse_c.cam_settings}
+            #timelapse_c.set_cam_params(**new_cam_settings)
             templateData['camsettings'] = timelapse_c.cam_settings
+            
+            # new interval parameters
+            timelapse_c.set_interval(float(request.form.get('t_start')), float(request.form.get('duration')), float(request.form.get('f_acc')))
+            lapse_interval = timelapse_c.current_interval
+            templateData['lapse_interval'] = (lapse_interval[0].hour + lapse_interval[0].minute / 60, lapse_interval[1], lapse_interval[2])
         elif 'preview' in request.form:
             # capture preview
             templateData['preview_img'] = url_for('static', filename = timelapse_c.capture_preview())
         elif 'abort' in request.form:
             # abort timelapse
             timelapse_c.stop()
+        elif 'lapse_start' in request.form:
+            # start timelapse
+            timelapse_c.start()
     else:
         # whatever
         pass

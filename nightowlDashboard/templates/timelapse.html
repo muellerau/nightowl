@@ -5,13 +5,16 @@
 <div class="content">
   <div>
     <h3>Aktuelle Zeitrafferkonfiguration</h3>
+      {% for i in range(lapse_interval|length) %}
+        <p>{{ lapse_interval_text[i] }} {{ lapse_interval[i] }}</p>
+      {% endfor %}
       {% for key, value in camsettings.items() %}
         <p>{{ key }}: {{ value }}</p>
       {% endfor %}
   </div>
   {% if camstatus %}
   <div>
-    <h3>Zeitrafferaufnahme läuft!</h3>
+    <h2>Zeitrafferaufnahme läuft!</h2>
     <form method="post">
       <button name="abort" type="submit" value="abort">Aufnahme stoppen</button>
     </form>
@@ -20,11 +23,34 @@
   <div>
     <h3>Neue Zeitrafferkonfiguration</h3>
       <form method="post">
-        {% for key, value in camsettings.items() %}
-          <label for="{{ key }}">{{ key }}</label>
-          <input type="text" id="{{ key }}" name="{{ key }}" value="{{ value }}" required>
+          <label for="t_start">Start</label>
+          <input type="text" id="t_start" name="t_start" value="{{ lapse_interval[0] }}">
           <br>
-        {% endfor %}
+          <label for="duration">Dauer</label>
+          <input type="text" id="duration" name="duration" value="{{ lapse_interval[1] }}">
+          <br>
+          <label for="f_acc">Faktor</label>
+          <input type="text" id="f_acc" name="f_acc" value="{{ lapse_interval[2] }}">
+          <br>
+          <label for="camresolution">Auflösung</label>
+          <select name="camresolution" id="camresolution">
+            {% for k,v in camresolution_options.items() %}
+            <option value="{{ v }}" {% if v == camsettings['camresolution'] %}selected="selected"{% endif %}>{{ k }}</option>
+            {% endfor %}
+          </select>
+          <br>
+          <label for="camiso">ISO (0 = auto)</label>
+          <input type="number" id="camiso" name="camiso" value="{{ camsettings['camiso'] }}" min="0" max="1200" step="100">
+          <br>
+          <p>Infrarotlicht
+          <input type="radio" id="IRlight_on" name="ir_light" value="True" {% if camsettings['ir_light'] %}checked="checked"{% endif %} required>
+          <label for="IRlight_on">an</label>
+          <input type="radio" id="IRlight_off" name="ir_light" value="False" {% if not camsettings['ir_light'] %}checked="checked"{% endif %} required>
+          <label for="IRlight_off">aus</label>
+          </p>
+          <br>
+          <input type="hidden" name="tmp_dir" value="{{ camsettings['tmp_dir'] }}">
+          <input type="hidden" name="mov_dir" value="{{ camsettings['mov_dir'] }}">
         <input type="submit" name="camsetter" value="Neue Einstellungen übernehmen">
       </form>
   </div>
@@ -33,6 +59,13 @@
     {% if preview_img %}<img src="{{ preview_img }}">{% endif %}
     <form method="post">
       <button name="preview" type="submit" value="preview">Vorschaubild aufnehmen</button>
+    </form>
+  </div>
+  <div>
+    <h3>Zeitrafferaufnahme starten</h3>
+    <p>Vor dem Start, Einstellungen kontrollieren!</p>
+    <form method="post">
+      <button name="lapse_start" type="submit" value="lapse_start">Zeitrafferaufnahme jetzt starten</button>
     </form>
   </div>
   {% endif %}
