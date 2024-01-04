@@ -40,7 +40,7 @@ def index():
     }
     return render_template('index.html', content = 'landing.html', **templateData)
 
-@app.route('/livepage')
+@app.route('/livepage', methods = ['GET', 'POST'])
 def livepage():
     """Video streaming page."""
     templateData = {
@@ -48,6 +48,13 @@ def livepage():
         'IRstate': bool(redeyes.status),
         'camstatus': timelapse_c.status
     }
+    if request.method == 'POST':
+        redeyes = IReyes()
+        if request.form.get('IRled_state') == 'IRon':
+            redeyes.turn_on()
+        elif request.form.get('IRled_state') == 'IRoff':
+            redeyes.turn_off()
+        redeyes.cleanup()
     return render_template('index.html', content = 'livepage.html', **templateData)
 
 @app.route('/timelapse', methods = ['GET', 'POST'])
@@ -67,7 +74,7 @@ def tlpage():
             templateData['camsettings'] = timelapse_c.cam_settings
         elif 'preview' in request.form:
             # capture preview
-            templateData['preview_img'] = timelapse_c.preview()
+            templateData['preview_img'] = timelapse_c.capture_preview()
         elif 'abort' in request.form:
             # abort timelapse
             timelapse_c.stop()
@@ -84,16 +91,9 @@ def gen(camera):
         yield b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n--frame\r\n'
 
 
-@app.route('/video_feed', methods = ['GET', 'POST'])
+@app.route('/video_feed')
 def video_feed():
     """Video streaming route. Link this URL in the src attribute of an img tag."""
-    if request.method == 'POST':
-        redeyes = IReyes()
-        if request.form.get('IRled_state') == 'IRon':
-            redeyes.turn_on()
-        elif request.form.get('IRled_state') == 'IRoff':
-            redeyes.turn_off()
-        redeyes.cleanup()
     return Response(gen(Camera()), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
