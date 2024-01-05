@@ -107,10 +107,6 @@ def tlpage():
         pass
     return render_template('index.html', content = 'timelapse.html', **templateData)
 
-#@app.route('/<folder>/images/<filename>')
-#def get_image(folder, filename):
-#    return send_from_directory(folder, filename)
-
 # Live Video Feed
 def gen(camera):
     """Video streaming generator function."""
@@ -141,10 +137,10 @@ def livepage():
             templateData['IRstate'] = bool(redeyes.status)
     return render_template('index.html', content = 'livepage.html', **templateData)
 
-@app.route("/toggle_lights/", methods = ['POST'])
-def toggle_lights():
-    redeyes.toggle()
-    return redirect(request.referrer)
+#@app.route("/toggle_lights/", methods = ['POST'])
+#def toggle_lights():
+#    redeyes.toggle()
+#    return redirect(request.referrer)
 
 
 
