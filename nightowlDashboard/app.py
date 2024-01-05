@@ -46,6 +46,7 @@ def index():
 @app.route('/timelapse', methods = ['GET', 'POST'])
 def tlpage():
     """Timelapse configuration page."""
+    lapse_thread = Thread(target=timelapse_c.start, args=[])
     lapse_interval = timelapse_c.current_interval
     templateData = {
         'camsettings': timelapse_c.cam_settings,
@@ -66,7 +67,7 @@ def tlpage():
                                     '480x320 (HVGA 3:2)':'480x320',
                                     '320x240 (QVGA 4:3)':'320x240'
                                  },
-        'camiso_options': (0,50,100,200,300,400,500,600,800,1000)
+        'camiso_options': (0,50,100,200,300,400,500,600,800,1000) # these are not in use
     }
     if request.method == 'POST':
         # handle form input
@@ -92,12 +93,15 @@ def tlpage():
         elif 'abort' in request.form:
             # abort timelapse
             timelapse_c.stop()
+            time.sleep(1)
+            templateData['camstatus'] = timelapse_c.status
+            #lapse_thread.join(timeout=10)
         elif 'lapse_start' in request.form:
             # start timelapse
-            lapse_thread = Thread(timelapse_c.start(), args=[])
             lapse_thread.start()
-            time.sleep(2)
-            print("Thread started")
+            time.sleep(1)
+            templateData['camstatus'] = timelapse_c.status
+            #lapse_thread.join(timeout=1)
     else:
         # whatever
         pass
