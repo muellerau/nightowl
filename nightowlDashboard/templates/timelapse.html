@@ -8,9 +8,10 @@
       {% for i in range(lapse_interval|length) %}
         <p>{{ lapse_interval_text[i] }} {{ lapse_interval[i] }}</p>
       {% endfor %}
-      {% for key, value in camsettings.items() %}
-        <p>{{ key }}: {{ value }}</p>
-      {% endfor %}
+      <h4>Kamera</h4>
+      <p>Auflösung: {{ camsettings['camresolution'] }}</p>
+      <p>ISO: {{ camsettings['camiso'] }}</p>
+      <p>Infrarotlicht: {% if camsettings['ir_light'] %}ein{% else %}aus{% endif %}</p>
   </div>
   {% if camstatus %}
   <div>
@@ -31,6 +32,8 @@
           <br>
           <label for="f_acc">Faktor</label>
           <input type="text" id="f_acc" name="f_acc" value="{{ lapse_interval[2] }}">
+          <br>
+          <h4>Kamera</h4>
           <br>
           <label for="camresolution">Auflösung</label>
           <select name="camresolution" id="camresolution">
