@@ -133,7 +133,6 @@ class Timelapse:
     def stop(self) -> None:
         self._running = False
     
-    #def set_interval(self, t_start: float = float(datetime.now().hour + datetime.now().minute / 60 + datetime.now().second / 60),
     def set_interval(self, t_start = datetime.now(), duration: float = 1.0, f_acc: float = 240.0) -> None:
         # duration in hours
         # f_acc time acceleration factor; default of 240 translates to one capture every 10s in a 24fps movie

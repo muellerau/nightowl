@@ -29,8 +29,9 @@ else:
 # from camera_pi import Camera
 
 app = Flask(__name__)
-app.config['MOV_FOLDER'] = 'mov/'
-app.config['TMP_FOLDER'] = 'tmp/'
+app.config['MOV_FOLDER'] = 'static/mov/'
+#app.config['TMP_FOLDER'] = 'static/tmp/'
+app.config['AHT20_FOLDER'] = 'static/aht20/'
 
 @app.route('/')
 def index():
@@ -106,10 +107,9 @@ def tlpage():
     else:
         # whatever
         pass
-    files = sorted(os.listdir(app.config['MOV_FOLDER']))
     return render_template('index.html', content = 'timelapse.html', files = files, **templateData)
 
-# movie file handling
+# Filebrowser
 @app.route('/download/<filename>')
 def download(filename):
     return send_from_directory(app.config['MOV_FOLDER'], filename)
@@ -119,6 +119,12 @@ def delete(filename):
     file_path = os.path.join(app.config['MOV_FOLDER'], filename)
     os.remove(file_path)
     return redirect(url_for('tlpage'))
+
+@app.route('/filebrowser', methods = ['GET', 'POST'])
+def filebrowser():
+    moviefiles = sorted(os.listdir(app.config['MOV_FOLDER']))
+    sensorfiles = sorted(os.listdir(app.config['AHT20_FOLDER']))
+    return render_template('index.html', content = 'filebrowser.html', moviefiles = moviefiles, sensorfiles = sensorfiles)
 
 # Live Video Feed
 def gen(camera):
