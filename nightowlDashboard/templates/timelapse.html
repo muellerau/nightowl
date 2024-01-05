@@ -75,6 +75,15 @@
   <hr>
   <div>
     <h3>Gespeicherte Zeitrafferaufnahmen</h3>
-    <p>placeholder</p>
+    <ul class="filelist">
+        {% for file in files %}
+            <li>
+                <a href="{{ url_for('download', filename=file) }}" download="{{ file }}">{{ file }}</a>
+                <form action="{{ url_for('delete', filename=file) }}" method="post" style="display:inline;">
+                    <input type="submit" value="X">
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
   </div>
 </div>

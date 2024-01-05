@@ -11,6 +11,11 @@ img {
     height: auto;
 }
 
+/* File Browsers */
+.filelist li {
+    list-style-type: none;
+}
+
 /* Video Feed */
 #livestream img {
     max-width: 100%;

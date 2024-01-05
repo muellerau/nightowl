@@ -2,7 +2,7 @@
 
 from importlib import import_module
 import os
-from flask import Flask, render_template, Response, redirect, request, url_for#, send_from_directory
+from flask import Flask, render_template, Response, redirect, request, url_for, send_from_directory
 import time
 from datetime import datetime
 from threading import Thread
@@ -29,7 +29,8 @@ else:
 # from camera_pi import Camera
 
 app = Flask(__name__)
-
+app.config['MOV_FOLDER'] = 'mov/'
+app.config['TMP_FOLDER'] = 'tmp/'
 
 @app.route('/')
 def index():
@@ -105,7 +106,19 @@ def tlpage():
     else:
         # whatever
         pass
-    return render_template('index.html', content = 'timelapse.html', **templateData)
+    files = sorted(os.listdir(app.config['MOV_FOLDER']))
+    return render_template('index.html', content = 'timelapse.html', files = files, **templateData)
+
+# movie file handling
+@app.route('/download/<filename>')
+def download(filename):
+    return send_from_directory(app.config['MOV_FOLDER'], filename)
+
+@app.route('/delete/<filename>', methods=['POST'])
+def delete(filename):
+    file_path = os.path.join(app.config['MOV_FOLDER'], filename)
+    os.remove(file_path)
+    return redirect(url_for('tlpage'))
 
 # Live Video Feed
 def gen(camera):
