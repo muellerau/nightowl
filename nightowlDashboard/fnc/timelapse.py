@@ -46,7 +46,6 @@ class Timelapse:
                     camera.start_preview()
                     sleep(2)
                 camera.capture(prev_img, format = 'jpeg', thumbnail = None, bayer = True)
-                
             if self._cam_settings['ir_light']:
                 self._cameyes.turn_off()
                 #self._cameyes.cleanup() # will interfere with app.py calls...
@@ -134,15 +133,16 @@ class Timelapse:
     def stop(self) -> None:
         self._running = False
     
-    def set_interval(self, t_start: float = float(datetime.now().hour + datetime.now().minute / 60 + datetime.now().second / 60),
-            duration: float = 1.0, f_acc: float = 240.0) -> None:
-        # t_start hour of 24h scale
+    #def set_interval(self, t_start: float = float(datetime.now().hour + datetime.now().minute / 60 + datetime.now().second / 60),
+    def set_interval(self, t_start = datetime.now(), duration: float = 1.0, f_acc: float = 240.0) -> None:
         # duration in hours
         # f_acc time acceleration factor; default of 240 translates to one capture every 10s in a 24fps movie
-        if t_start < 24 and t_start > 0 and duration > 0 and duration < 24 and f_acc > 1:
-            today = datetime.now().date()
-            t_start_dt = datetime(today.year, today.month, today.day, int(t_start), int((t_start%1)*60), int((((t_start%1)*60)%1)*60) )
-            self._tinterval = (t_start_dt, duration, f_acc)
+        if duration > 0 and f_acc > 1:
+            if type(t_start) is not type(datetime.now()):
+                t_start = datetime.now()
+            #today = datetime.now().date()
+            #t_start_dt = datetime(today.year, today.month, today.day, int(t_start), int((t_start%1)*60), int((((t_start%1)*60)%1)*60) )
+            self._tinterval = (t_start, duration, f_acc)
         else:
             print("Timelapse parameter error. Requirements: t_start 0 < x < 24; duration > 0; f_acc > 1")
     

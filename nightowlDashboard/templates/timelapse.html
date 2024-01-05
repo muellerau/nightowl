@@ -24,7 +24,7 @@
     <h3>Neue Zeitrafferkonfiguration</h3>
       <form method="post">
           <label for="t_start">Start</label>
-          <input type="text" id="t_start" name="t_start" value="{{ lapse_interval[0] }}">
+          <input type="datetime-local" id="t_start" name="t_start">
           <br>
           <label for="duration">Dauer</label>
           <input type="text" id="duration" name="duration" value="{{ lapse_interval[1] }}">

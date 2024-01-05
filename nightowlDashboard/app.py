@@ -49,7 +49,7 @@ def tlpage():
     lapse_interval = timelapse_c.current_interval
     templateData = {
         'camsettings': timelapse_c.cam_settings,
-        'lapse_interval': (lapse_interval[0].hour + lapse_interval[0].minute / 60, lapse_interval[1], lapse_interval[2]),
+        'lapse_interval': (lapse_interval[0].strftime('%y-%m-%dT%H:%M'), lapse_interval[1], lapse_interval[2]),
         'lapse_interval_text': ('Start', 'Dauer (in Stunden)', 'acc-Faktor'),
         'camstatus': timelapse_c.status,
         'preview_img': None,
@@ -83,9 +83,9 @@ def tlpage():
             templateData['camsettings'] = timelapse_c.cam_settings
             
             # new interval parameters
-            timelapse_c.set_interval(float(request.form.get('t_start')), float(request.form.get('duration')), float(request.form.get('f_acc')))
+            timelapse_c.set_interval(datetime.strptime(request.form.get('t_start'), '%Y-%m-%dT%H:%M'), float(request.form.get('duration')), float(request.form.get('f_acc')))
             lapse_interval = timelapse_c.current_interval
-            templateData['lapse_interval'] = (lapse_interval[0].hour + lapse_interval[0].minute / 60, lapse_interval[1], lapse_interval[2])
+            templateData['lapse_interval'] = (lapse_interval[0].strftime('%Y-%m-%dT%H:%M'), lapse_interval[1], lapse_interval[2])
         elif 'preview' in request.form:
             # capture preview
             templateData['preview_img'] = url_for('static', filename = timelapse_c.capture_preview())
@@ -96,6 +96,8 @@ def tlpage():
             # start timelapse
             lapse_thread = Thread(timelapse_c.start(), args=[])
             lapse_thread.start()
+            time.sleep(2)
+            print("Thread started")
     else:
         # whatever
         pass
