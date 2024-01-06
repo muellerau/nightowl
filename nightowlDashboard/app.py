@@ -151,7 +151,7 @@ def download(filename):
 def delete(filename):
     file_path = os.path.join(app.config['MOV_FOLDER'], filename)
     os.remove(file_path)
-    return redirect(url_for('tlpage'))
+    return redirect(url_for('filebrowser'))
 
 @app.route('/filebrowser', methods = ['GET', 'POST'])
 def filebrowser():
