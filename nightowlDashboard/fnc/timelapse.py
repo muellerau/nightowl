@@ -141,9 +141,12 @@ class Timelapse:
         # combine image captures to movie
         if not self._conversion_running:
             self._conversion_running = True
+            tl_timestamp = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
+            outfile = self._app_cwd + self._cam_settings['mov_dir'] + 'Zeitraffer_' + tl_timestamp + '.mp4'
+            # construct command
+            cmd = 'ffmpeg -framerate ' + str(self._movie_framerate) + ' -pattern_type glob -i "' + self._app_cwd+self._cam_settings['tmp_dir']+'/timelapse_*.jpg" -c:v libx264 ' + outfile
             # run frame combination
-            #cmd = 'ffmpeg -r '+str(self._movie_framerate)
-            #subprocess.run(cmd.split(' ')) # need to find out good settings
+            subprocess.run(cmd.split(' '))
             self._conversion_running = False
         pass
     
