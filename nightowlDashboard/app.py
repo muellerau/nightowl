@@ -107,7 +107,7 @@ def tlpage():
     else:
         # whatever
         pass
-    return render_template('index.html', content = 'timelapse.html', files = files, **templateData)
+    return render_template('index.html', content = 'timelapse.html', **templateData)
 
 # Filebrowser
 @app.route('/download/<filename>')
