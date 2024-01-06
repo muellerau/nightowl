@@ -5,6 +5,7 @@ from picamera import PiCamera
 from datetime import datetime, timedelta
 from drv.LEDdriver import IReyes
 import os
+from threading import Thread
 
 class Timelapse:
     def __init__(self) -> None:
@@ -98,6 +99,7 @@ class Timelapse:
     
     def _slow_capture(self) -> None:
         counter = 0
+        tl_timestamp = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
         # loop capture until stopped
         while self._running:
             if self._cam_settings['ir_light']:
@@ -107,7 +109,7 @@ class Timelapse:
                 if self._cam_settings['camiso'] > 0: # if ISO is set, fix camera exposure
                     self._fix_cam_exp(camera)
                 # Capture image
-                camera.capture(self._app_cwd + self._cam_settings['tmp_dir']+'/timelapse_frame_'+str(counter).zfill(6)+'.jpg', format = 'jpeg', thumbnail = None, bayer = False)
+                camera.capture(self._app_cwd + self._cam_settings['tmp_dir']+'/timelapse_'+tl_timestamp+'_frame_'+str(counter).zfill(6)+'.jpg', format = 'jpeg', thumbnail = None, bayer = False)
                 counter += 1
             if self._cam_settings['ir_light']:
                 self._cameyes.turn_off()
@@ -117,16 +119,17 @@ class Timelapse:
         if self._cam_settings['ir_light']:
             self._cameyes.turn_on()
             sleep(1)
+        tl_timestamp = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
         with PiCamera(resolution = camresolution) as camera:
             if self._cam_settings['camiso']: # if ISO is set, fix camera exposure
                 self._fix_cam_exp(camera)
             # Capture images continuously with small delays
-            for image in camera.capture_continous(self._app_cwd + self._cam_settings['tmp_dir']+'/timelapse_frame_{counter:06d}.jpg', format = 'jpeg', thumbnail = None, bayer = False):
+            for image in camera.capture_continous(self._app_cwd + self._cam_settings['tmp_dir']+'/timelapse_'+tl_timestamp+'_frame_{counter:06d}.jpg', format = 'jpeg', thumbnail = None, bayer = False):
                 self._wait()
         if self._cam_settings['ir_light']:
             self._cameyes.turn_off()
     
-    def _combine_shots_to_movie(self) -> None:
+    def _combine_shots_to_movie(self, framepath: str) -> None:
         # combine image captures to movie
         pass
     
