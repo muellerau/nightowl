@@ -5,11 +5,14 @@ from picamera import PiCamera
 from datetime import datetime, timedelta
 from drv.LEDdriver import IReyes
 import os
+import glob
 from threading import Thread
+import subprocess
 
 class Timelapse:
     def __init__(self) -> None:
         self._running = False
+        self._conversion_running = False
         self._movie_framerate = 24
         # initialize defaults
         self.set_interval()
@@ -58,6 +61,10 @@ class Timelapse:
         #    print("WARNING: camera framerate may not be lower than 24 or greater than 60. Using default of 30.")
         #    camframerate = self._movie_framerate
         
+        # Clear tmp files
+        self.clear_tmp(prefix = 'timelapse')
+        self.clear_tmp(prefix = 'preview')
+        
         # Wait for start
         while self._running and (self._tinterval[0] - datetime.now()).total_seconds() > 0:
             print("waiting for start")
@@ -75,7 +82,8 @@ class Timelapse:
         else:
             self._fast_capture() # intervals less than 5s can be handled by continuous capture
         # make timelapse movie
-        self._combine_shots_to_movie()
+        t_combine = Thread(target = self._combine_shots_to_movie, args = [])
+        t_combine.start()
         # cleanup GPIO resources
         #if self._cam_settings['ir_light']:
         #    self.cameyes.cleanup() # will interfere with app.py calls...
@@ -129,12 +137,28 @@ class Timelapse:
         if self._cam_settings['ir_light']:
             self._cameyes.turn_off()
     
-    def _combine_shots_to_movie(self, framepath: str) -> None:
+    def _combine_shots_to_movie(self) -> None:
         # combine image captures to movie
+        if not self._conversion_running:
+            self._conversion_running = True
+            # run frame combination
+            #cmd = 'ffmpeg -r '+str(self._movie_framerate)
+            #subprocess.run(cmd.split(' ')) # need to find out good settings
+            self._conversion_running = False
         pass
     
     def stop(self) -> None:
         self._running = False
+    
+    def clear_tmp(self, prefix: str = 'preview', quant: int = 0) -> None:
+        # clear stale tmp images
+        tmp_content = sorted(glob.glob(self._app_cwd + self._cam_settings['tmp_dir'] + '/' + prefix + '*'))
+        if quant > 0:
+            for f in tmp_content[quant * -1:]:
+                os.remove(f)
+        else:
+            for f in tmp_content:
+                os.remove(f)
     
     def set_interval(self, t_start = datetime.now(), duration: float = 1.0, f_acc: float = 240.0) -> None:
         # duration in hours
