@@ -177,7 +177,7 @@ class Timelapse:
     
     def _wait(self) -> None:
         if (self._tinterval[0] + timedelta(hours=self._tinterval[1])) < datetime.now():
-            self._stop()
+            self.stop()
         sleep(self._tinterval[2] / self._movie_framerate)
 
     @property
