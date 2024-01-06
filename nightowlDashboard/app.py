@@ -109,6 +109,39 @@ def tlpage():
         pass
     return render_template('index.html', content = 'timelapse.html', **templateData)
 
+#@app.route('/timelapse_process', methods = ['GET', 'POST'])
+#def tlprocesspage():
+#    lapse_thread = Thread(target=timelapse_c.start, args=[])
+#    lapse_interval = timelapse_c.current_interval
+#    if request.method == 'POST':
+#        # handle form input
+#        if 'camsetter' in request.form:
+#            # new cam settings
+#            timelapse_c.set_cam_params(camresolution = request.form.get('camresolution'),
+#                camiso = int(request.form.get('camiso')),
+#                ir_light = (request.form.get('ir_light') == 'True'),
+#                tmp_dir = request.form.get('tmp_dir'),
+#                mov_dir = request.form.get('mov_dir')
+#                )
+#            
+#            # new interval parameters
+#            timelapse_c.set_interval(datetime.strptime(request.form.get('t_start'), '%Y-%m-%dT%H:%M'), float(request.form.get('duration')), float(request.form.get('f_acc')))
+#        elif 'preview' in request.form:
+#            # capture preview
+#            templateData['preview_img'] = url_for('static', filename = timelapse_c.capture_preview())
+#        elif 'abort' in request.form:
+#            # abort timelapse
+#            timelapse_c.stop()
+#            time.sleep(1)
+#        elif 'lapse_start' in request.form:
+#            # start timelapse
+#            lapse_thread.start()
+#            time.sleep(1)
+#    else:
+#        # whatever
+#        pass
+#    return redirect('/timelapse')
+
 # Filebrowser
 @app.route('/download/<filename>')
 def download(filename):
@@ -122,6 +155,7 @@ def delete(filename):
 
 @app.route('/filebrowser', methods = ['GET', 'POST'])
 def filebrowser():
+    """File download page."""
     moviefiles = sorted(os.listdir(app.config['MOV_FOLDER']))
     sensorfiles = sorted(os.listdir(app.config['AHT20_FOLDER']))
     return render_template('index.html', content = 'filebrowser.html', moviefiles = moviefiles, sensorfiles = sensorfiles)
