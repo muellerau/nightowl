@@ -117,7 +117,8 @@ class Timelapse:
                 if self._cam_settings['camiso'] > 0: # if ISO is set, fix camera exposure
                     self._fix_cam_exp(camera)
                 # Capture image
-                camera.capture(self._app_cwd + self._cam_settings['tmp_dir']+'/timelapse_'+tl_timestamp+'_frame_'+str(counter).zfill(6)+'.jpg', format = 'jpeg', thumbnail = None, bayer = False)
+                camera.capture(self._app_cwd + self._cam_settings['tmp_dir']+'/timelapse_'+tl_timestamp+'_frame_'+str(counter).zfill(6)+'.jpg',
+                                format = 'jpeg', thumbnail = None, bayer = False)
                 counter += 1
             if self._cam_settings['ir_light']:
                 self._cameyes.turn_off()
@@ -128,12 +129,15 @@ class Timelapse:
             self._cameyes.turn_on()
             sleep(1)
         tl_timestamp = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
-        with PiCamera(resolution = camresolution) as camera:
+        with PiCamera(resolution = self._cam_settings['camresolution']) as camera:
             if self._cam_settings['camiso']: # if ISO is set, fix camera exposure
                 self._fix_cam_exp(camera)
             # Capture images continuously with small delays
-            for image in camera.capture_continous(self._app_cwd + self._cam_settings['tmp_dir']+'/timelapse_'+tl_timestamp+'_frame_{counter:06d}.jpg', format = 'jpeg', thumbnail = None, bayer = False):
+            for image in camera.capture_continuous(self._app_cwd + self._cam_settings['tmp_dir']+'/timelapse_'+tl_timestamp+'_frame_{counter:06d}.jpg',
+                                                    format = 'jpeg', thumbnail = None, bayer = False):
                 self._wait()
+                if not self._running:
+                    break
         if self._cam_settings['ir_light']:
             self._cameyes.turn_off()
     
