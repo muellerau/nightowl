@@ -24,3 +24,32 @@ The dashboard incorporates Miguel Grinberg's camera live streaming driver (https
 - Copy the nightowlDashboard folder to the Pi Zero
 - Set environment variable ```CAMERA = pi```
 - Start the dashboard as root with environment preservation: ```sudo -E python3 app.py```
+
+## Use as service
+Establishing the flask webserver as a server will enable
+- start on boot
+- automatic restarts upon crash/failure
+- journal logging
+
+Create a file ```/etc/systemd/system/nightowl.service``` with content
+```[Unit]
+Description=Nightowl Web Application
+After=network.target
+StartLimitBurst=10
+StartLimitIntervalSec=300
+
+[Service]
+User=root
+WorkingDirectory=/home/nachteule/nightowlDashboard
+Environment=CAMERA=pi
+ExecStart=/bin/env python3 /home/nachteule/nightowlDashboard/app.py
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target```
+
+Execute ```sudo systemctl daemon-reload```
+Check if it executes fine by ```sudo systemctl start nightowl```
+Status checks can be performed with ```sudo systemctl status nightowl```
+The journal can be accessed through ```journatctl -u nightowl```
