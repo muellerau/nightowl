@@ -151,13 +151,15 @@ class Timelapse:
         if not self._conversion_running:
             self._conversion_running = True
             tl_timestamp = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
+            tmpfile = self._app_cwd + self._cam_settings['mov_dir'] + '/ffmpeg_zeitraffer_' + tl_timestamp + '.mp4'
             outfile = self._app_cwd + self._cam_settings['mov_dir'] + '/zeitraffer_' + tl_timestamp + '.mp4'
             # construct command
-            cmd = 'ffmpeg -framerate ' + str(self._movie_framerate) + ' -pattern_type glob -i "' + self._app_cwd+self._cam_settings['tmp_dir']+'/timelapse_*.jpg" -c:v libx264 ' + outfile
+            ffmpeg_cmd = 'ffmpeg -framerate ' + str(self._movie_framerate) + ' -pattern_type glob -i "' + self._app_cwd+self._cam_settings['tmp_dir']+'/timelapse_*.jpg" -c:v libx264 ' + tmpfile
+            epilogue_cmd = 'mv ' + tmpfile + ' ' + outfile
+            final_cmd = ffmpeg_cmd + ' && ' + epilogue_cmd
             # run frame combination
-            subprocess.run(cmd, shell = True)
+            subprocess.run(final_cmd, shell = True)
             self._conversion_running = False
-        pass
     
     def stop(self) -> None:
         self._running = False
@@ -199,4 +201,4 @@ class Timelapse:
     
     @property
     def status(self) -> bool:
-        return any(self._running, self._conversion_running)
+        return any([self._running, self._conversion_running])
