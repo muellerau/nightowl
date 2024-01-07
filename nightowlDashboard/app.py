@@ -51,6 +51,7 @@ def tlpage():
     lapse_thread = Thread(target=timelapse_c.start, args=[])
     lapse_interval = timelapse_c.current_interval
     templateData = {
+        'nowtime': time.ctime(),
         'camsettings': timelapse_c.cam_settings,
         'lapse_interval': (lapse_interval[0].strftime('%y-%m-%dT%H:%M'), lapse_interval[1], lapse_interval[2]),
         'lapse_interval_text': ('Start', 'Dauer (in Stunden)', 'acc-Faktor'),
