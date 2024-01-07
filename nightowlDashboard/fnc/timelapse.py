@@ -199,4 +199,4 @@ class Timelapse:
     
     @property
     def status(self) -> bool:
-        return self._running
+        return any(self._running, self._conversion_running)
