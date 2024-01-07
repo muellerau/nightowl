@@ -199,15 +199,20 @@ def livepage():
 #    redeyes.toggle()
 #    return redirect(request.referrer)
 
-
+# shutdown
 @app.route('/poweroff', methods = ['GET', 'POST'])
 def poweroff():
     if request.method == 'POST':
         if request.form.get('poweroff') == 'poweroff_yes':
             os.system('sudo systemctl poweroff')
+            return redirect('/goodnight')
         else:
             return redirect('/')
     return render_template('index.html', content = 'poweroff.html')
+
+@app.route('/goodnight')
+def goodnight():
+    return render_template('goodnight.html')
 
 
 if __name__ == '__main__':
