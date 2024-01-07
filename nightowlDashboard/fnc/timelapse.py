@@ -70,23 +70,28 @@ class Timelapse:
             print("waiting for start")
             sleep(1)
         
-        # Initialize/reset camera variables for fixed exposure settings
-        self._cam_shut_speed = None
-        self._cam_awb_gains = None
-        
-        if self._cam_settings['ir_light']:
-            self._cameyes = IReyes()
-        # main working area
-        if self._tinterval[2] >= 120:
-            self._slow_capture() # handle large capture intervals individually
-        else:
-            self._fast_capture() # intervals less than 5s can be handled by continuous capture
-        # make timelapse movie
-        t_combine = Thread(target = self._combine_shots_to_movie, args = [])
-        t_combine.start()
-        # cleanup GPIO resources
-        #if self._cam_settings['ir_light']:
-        #    self.cameyes.cleanup() # will interfere with app.py calls...
+        if self._running:
+            # Initialize/reset camera variables for fixed exposure settings
+            self._cam_shut_speed = None
+            self._cam_awb_gains = None
+            
+            if self._cam_settings['ir_light']:
+                self._cameyes = IReyes()
+            
+            # main working area
+            if self._tinterval[2] >= 120:
+                self._slow_capture() # handle large capture intervals individually
+            else:
+                self._fast_capture() # intervals less than 5s can be handled by continuous capture
+            
+            # make timelapse movie
+            t_combine = Thread(target = self._combine_shots_to_movie, args = [])
+            t_combine.start()
+            sleep(1)
+            
+            # cleanup GPIO resources
+            #if self._cam_settings['ir_light']:
+            #    self.cameyes.cleanup() # will interfere with app.py calls...
     
     def _fix_cam_exp(self, camera):
         if camera:
