@@ -159,7 +159,10 @@ def filebrowser():
     """File download page."""
     moviefiles = sorted(os.listdir(app.config['MOV_FOLDER']))
     sensorfiles = sorted(os.listdir(app.config['AHT20_FOLDER']))
-    return render_template('index.html', content = 'filebrowser.html', moviefiles = moviefiles, sensorfiles = sensorfiles)
+    templateData = {
+        'nowtime': time.ctime()
+    }
+    return render_template('index.html', content = 'filebrowser.html', moviefiles = moviefiles, sensorfiles = sensorfiles, **templateData)
 
 # Live Video Feed
 def gen(camera):
@@ -196,6 +199,15 @@ def livepage():
 #    redeyes.toggle()
 #    return redirect(request.referrer)
 
+
+@app.route('/poweroff', methods = ['GET', 'POST'])
+def poweroff():
+    if request.method == 'POST':
+        if request.form.get('poweroff') == 'poweroff_yes':
+            os.system('sudo systemctl poweroff')
+        else:
+            return redirect('/')
+    return render_template('index.html', content = 'poweroff.html')
 
 
 if __name__ == '__main__':
