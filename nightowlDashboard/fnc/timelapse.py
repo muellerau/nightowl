@@ -151,7 +151,7 @@ class Timelapse:
         if not self._conversion_running:
             self._conversion_running = True
             tl_timestamp = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
-            tmpfile = self._app_cwd + self._cam_settings['mov_dir'] + '/ffmpeg_zeitraffer_' + tl_timestamp + '.mp4'
+            tmpfile = self._app_cwd + self._cam_settings['tmp_dir'] + '/ffmpeg_zeitraffer_' + tl_timestamp + '.mp4'
             outfile = self._app_cwd + self._cam_settings['mov_dir'] + '/zeitraffer_' + tl_timestamp + '.mp4'
             # construct command
             ffmpeg_cmd = 'ffmpeg -framerate ' + str(self._movie_framerate) + ' -pattern_type glob -i "' + self._app_cwd+self._cam_settings['tmp_dir']+'/timelapse_*.jpg" -c:v libx264 ' + tmpfile
