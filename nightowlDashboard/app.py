@@ -86,8 +86,30 @@ def tlpage():
             #timelapse_c.set_cam_params(**new_cam_settings)
             templateData['camsettings'] = timelapse_c.cam_settings
             
+            # check user input
+            try:
+                newduration = float(request.form.get('duration'))
+                if newduration > 24:
+                    raise
+            except:
+                newduration = 1.0
+            
+            try:
+                newstart = datetime.strptime(request.form.get('t_start'), '%Y-%m-%dT%H:%M')
+                if (newstart + timedelta(hours=newduration)) < datetime.now():
+                    raise
+            except:
+                newstart = datetime.now()
+            
+            try:
+                newfacc = float(request.form.get('f_acc'))
+                if newfacc < 1:
+                    raise
+            except:
+                newfacc = 240.0
+            
             # new interval parameters
-            timelapse_c.set_interval(datetime.strptime(request.form.get('t_start'), '%Y-%m-%dT%H:%M'), float(request.form.get('duration')), float(request.form.get('f_acc')))
+            timelapse_c.set_interval(newstart, newduration, newfacc)
             lapse_interval = timelapse_c.current_interval
             templateData['lapse_interval'] = (lapse_interval[0].strftime('%Y-%m-%dT%H:%M'), lapse_interval[1], lapse_interval[2])
         elif 'preview' in request.form:
