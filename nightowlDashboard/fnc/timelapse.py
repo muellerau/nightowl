@@ -168,7 +168,7 @@ class Timelapse:
         # clear stale tmp images
         tmp_content = sorted(glob.glob(self._app_cwd + self._cam_settings['tmp_dir'] + '/' + prefix + '*'))
         if quant > 0:
-            for f in tmp_content[quant * -1:]:
+            for f in tmp_content[:quant]:
                 os.remove(f)
         else:
             for f in tmp_content:
