@@ -115,6 +115,10 @@ def tlpage():
         elif 'preview' in request.form:
             # capture preview
             templateData['preview_img'] = url_for('static', filename = timelapse_c.capture_preview())
+            #try:
+            #    templateData['preview_img'] = sorted(os.listdir(app.config['TMP_FOLDER']))[:-1]
+            #except:
+            #    templateData['preview_img'] = None
         elif 'abort' in request.form:
             # abort timelapse
             timelapse_c.stop()
