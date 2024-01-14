@@ -1,6 +1,6 @@
 # Nightowl
 
-A small, lightweight infrared timelapse camera for wildlife and plant surveillance.
+A small, lightweight infrared timelapse camera for wildlife and plant surveillance with temperature/humidity recording.
 I built this for a family member so they can observe plant growth at night and detect pests.
 
 ## Materials
@@ -15,13 +15,18 @@ I built this for a family member so they can observe plant growth at night and d
 | 6     | NPN BJT                                                 | onsemi/digikey  | PN2222      | 2        | 0.40   | 0.80   |                                       |
 | 7     | AHT20                                                   | Adafruit        | #4566       | 1        | 4.50   | 4.50   |                                       |
 | 8     | 3D printed housing                                      | any             | any         | x        | ???    | ???    | see below                             |
-| 9     | 30 Ah USB power bank                                    | any             | any         | 1        | ???    | ???    | any generic power bank with 2A or greater output will do |
+| 9     | M2 stand-offs (10mm male-female, 25mm female-female) + screws | Amazon    | B0BXT4FG1T  | 1        | 9.99   | 9.99   |                                       |
+| 10    | 30 Ah USB power bank                                    | any             | any         | 1        | ???    | ???    | any generic power bank with 2A or greater output will do |
+| 11    | tesa Sugru                                              | any             | any         | x        | ???    |        | used to isolate open wires, fix AHT20 and camera |
 
 Regarding the housing/case in line 8: models for 3D printing are located in the 'case' folder; my design was loosely based on
 https://www.thingiverse.com/thing:4741526
 and the stand is identical (or use other mounts depending on application)
+Note that I had some difficulty to fit the camera/LED module through the holes in the casing. Maybe the 3D print was a bit deformed or I made a mistake when calculating the dimensions, but a little bit of sanding resolved the issue.
 
 ## Wiring
+
+The IR LEDs require a lot of power, but I wanted to be able to power the device with a battery/power bank. To minimize energy consumption, I included a small circuit to enable manual switching of the IR LEDs.
 
 circuit sketch
 BJT = onsemi PN2222
@@ -47,6 +52,23 @@ I did some measurements using a generic amp-meter (no guarantees for accuracy)
 | CAM(+) -> LED(+)           | 140 (varies with photoresistor and potentiometer on LED) |
 
 If the LED power consumption is too high, adjust the variable resistor on the LEDs.
+
+
+## Assembly
+
+Before assembly, the switching circuit for the IR LEDs should be soldered. Any open wires can be isolated using a moldable plastic glue (e.g., I used Sugru).
+
+To mount the camera and Pi Zero in the case, stand-offs are needed (line 9 above):
+- 4x 6mm female-female in the cam body to support camera (glue onto plastic pins around camera hole)
+- place LEDs, place 2 washers over each mount hole, place camera on top, screw everything onto stand-off (this part is rather finicky)
+- 4x 15mm female-female in the cam body to support the Pi Zero body (glue onto raised plastic pins)
+- 4x 6mm male-female for the Pi Zero body to support the lid
+- the lid is simply screwed on
+
+The AHT20 (with header soldered on) can be mounted with small blobs of moldable plastic glue.
+
+The case leaves space for a small heatsinks to be added to the camera/LEDs and the Pi Zero (max 5mm). However, I only used a heatsink on the Pi Zero.
+
 
 
 ## Dashboard Dependencies
