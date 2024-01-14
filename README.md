@@ -6,7 +6,7 @@ I built this for a family member so they can observe plant growth at night and d
 ## Materials
 
 | line | item                                                    | supplier        | cat-no      | quantity | $/item | $total | remarks                               |
-| :---:| ------------------------------------------------------- | --------------- | ----------- | :------: | :----: | :----: | ------------------------------------- |
+| :--- | ------------------------------------------------------- | --------------- | ----------- | :------: | :----: | :----: | ------------------------------------- |
 | 1    | Raspberry Pi Zero W                                     | PiShopUS        | #808        | 1        | 15.00  | 15.00  | or better now, use Pi Zero 2W         |
 | 2    | microSD card 32GB or greater                            | any             | any         | 1        | ???    | ???    | I used a SanDisk 32GB Extreme Pro     |
 | 3    | DORHEA Camera Manual Focus 5MP OV5647 with 2x3W IR LED  | Amazon          | B07JXZ93SK  | 1        | 15.99  | 15.99  |                                       |
@@ -54,8 +54,8 @@ The dashboard incorporates Miguel Grinberg's camera live streaming driver (https
 
 ## Usage notes
 - Copy the nightowlDashboard folder to the Pi Zero
-- Set environment variable ```CAMERA = pi```
-- Start the dashboard as root with environment preservation: ```sudo -E python3 app.py```
+- Set environment variable `CAMERA = pi`
+- Start the dashboard as root with environment preservation: `sudo -E python3 app.py`
 
 ## Use as service
 Establishing the flask webserver as a server will enable
@@ -63,8 +63,10 @@ Establishing the flask webserver as a server will enable
 - automatic restarts upon crash/failure
 - journal logging
 
-- Create a file ```/etc/systemd/system/nightowl.service``` with content
-```[Unit]
+To do so,
+- create a file `/etc/systemd/system/nightowl.service` with content
+```
+[Unit]
 Description=Nightowl Web Application
 After=network.target
 StartLimitBurst=10
@@ -79,12 +81,13 @@ Restart=always
 RestartSec=30
 
 [Install]
-WantedBy=multi-user.target```
+WantedBy=multi-user.target
+```
 
-- Execute ```sudo systemctl daemon-reload```
-- Check if it executes fine by ```sudo systemctl start nightowl```
-- Status checks can be performed with ```sudo systemctl status nightowl```
-- The journal/log can be accessed through ```journatctl -u nightowl```
+- execute `sudo systemctl daemon-reload`
+- check if it executes fine by `sudo systemctl start nightowl`
+- status checks can be performed with `sudo systemctl status nightowl`
+- the journal/log can be accessed through `journatctl -u nightowl`
 
 
 
