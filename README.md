@@ -72,17 +72,19 @@ The case leaves space for a small heatsinks to be added to the camera/LEDs and t
 
 
 ## Dashboard Dependencies
- - Python modules: `flask` `picamera` `smbus2`
+Python modules: `flask` `picamera` `smbus2`
 
 The dashboard incorporates Miguel Grinberg's camera live streaming driver (https://github.com/miguelgrinberg/flask-video-streaming/) with minor adjustments.
 
-## Usage notes
-- Copy the nightowlDashboard folder to the Pi Zero
+## Installation
+- Install Raspbian image on the microSD card
+- Clone the nightowlDashboard folder to the Pi Zero
 - Set environment variable `CAMERA = pi`
+- Change directory to the dashboard folder `cd /home/nightowl/nightowlDashboard`
 - Start the dashboard as root with environment preservation: `sudo -E python3 app.py`
 
 ## Use as service
-Establishing the flask webserver as a server will enable
+Establishing the flask webserver as a service will enable
 - start on boot
 - automatic restarts upon crash/failure
 - journal logging
