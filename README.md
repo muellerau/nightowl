@@ -5,17 +5,17 @@ I built this for a family member so they can observe plant growth at night and d
 
 ## Materials
 
-| line | item                                                    | supplier        | cat-no      | quantity | $/item | $total | remarks                               |
-| :--- | ------------------------------------------------------- | --------------- | ----------- | :------: | :----: | :----: | ------------------------------------- |
-| 1    | Raspberry Pi Zero W                                     | PiShopUS        | #808        | 1        | 15.00  | 15.00  | or better now, use Pi Zero 2W         |
-| 2    | microSD card 32GB or greater                            | any             | any         | 1        | ???    | ???    | I used a SanDisk 32GB Extreme Pro     |
-| 3    | DORHEA Camera Manual Focus 5MP OV5647 with 2x3W IR LED  | Amazon          | B07JXZ93SK  | 1        | 15.99  | 15.99  |                                       |
-| 4    | Pi Zero Ribbon Cable Adapter 15CM 15 Pin to 22 Pin      | Amazon          | B0716TB6X3  | 1        | 5.99   | 5.99   |                                       |
-| 5    | R330 resistor                                           | any             | any         | 2        | 0.00   | 0.00   | still had a few lying around          |
-| 6    | NPN BJT                                                 | onsemi/digikey  | PN2222      | 2        | 0.40   | 0.80   |                                       |
-| 7    | AHT20                                                   | Adafruit        | #4566       | 1        | 4.50   | 4.50   |                                       |
-| 8    | 3D printed housing                                      | any             | any         | x        | ???    | ???    | see below                             |
-| 9    | 30 Ah USB power bank                                    | any             | any         | 1        | ???    | ???    | any generic power bank with 2A or greater output will do |
+| line  | item                                                    | supplier        | cat-no      | quantity | $/item | $total | remarks                               |
+| :---: | ------------------------------------------------------- | --------------- | ----------- | :------: | :----: | :----: | ------------------------------------- |
+| 1     | Raspberry Pi Zero W                                     | PiShopUS        | #808        | 1        | 15.00  | 15.00  | or better now, use Pi Zero 2W         |
+| 2     | microSD card 32GB or greater                            | any             | any         | 1        | ???    | ???    | I used a SanDisk 32GB Extreme Pro     |
+| 3     | DORHEA Camera Manual Focus 5MP OV5647 with 2x3W IR LED  | Amazon          | B07JXZ93SK  | 1        | 15.99  | 15.99  |                                       |
+| 4     | Pi Zero Ribbon Cable Adapter 15CM 15 Pin to 22 Pin      | Amazon          | B0716TB6X3  | 1        | 5.99   | 5.99   |                                       |
+| 5     | R330 resistor                                           | any             | any         | 2        | 0.00   | 0.00   | still had a few lying around          |
+| 6     | NPN BJT                                                 | onsemi/digikey  | PN2222      | 2        | 0.40   | 0.80   |                                       |
+| 7     | AHT20                                                   | Adafruit        | #4566       | 1        | 4.50   | 4.50   |                                       |
+| 8     | 3D printed housing                                      | any             | any         | x        | ???    | ???    | see below                             |
+| 9     | 30 Ah USB power bank                                    | any             | any         | 1        | ???    | ???    | any generic power bank with 2A or greater output will do |
 
 Regarding the housing/case in line 8: models for 3D printing are located in the 'case' folder; my design was loosely based on
 https://www.thingiverse.com/thing:4741526
@@ -23,17 +23,9 @@ and the stand is identical (or use other mounts depending on application)
 
 ## Wiring
 
-I did some measurements using a generic amp-meter (no guarantees for accuracy)
-| routing                    | max current (mA) |
-| -------------------------- | ---------------- |
-| GPIO pin7 -> R330 -> BJT-B | 9                |
-| CAM(+) -> LED(+)           | 140 (varies with photoresistor and potentiometer on LED) |
-
-If the LED power consumption is too high, adjust the variable resistor on the LEDs.
-
+circuit sketch
 BJT = onsemi PN2222
 
-circuit sketch
 
             LED(-) ------ BJT-C > BJT-B > BJT-E ----- 
              |||                   ^                |
@@ -46,6 +38,16 @@ circuit sketch
               ---------------------------------------
 
 This was the test setup. In the end, I used GPIO pins 13 and 15 (physical numbering; BCM numbering is GPIO 27 and 22).
+
+
+I did some measurements using a generic amp-meter (no guarantees for accuracy)
+| routing                    | max current (mA) |
+| -------------------------- | ---------------- |
+| GPIO pin7 -> R330 -> BJT-B | 9                |
+| CAM(+) -> LED(+)           | 140 (varies with photoresistor and potentiometer on LED) |
+
+If the LED power consumption is too high, adjust the variable resistor on the LEDs.
+
 
 ## Dashboard Dependencies
  - Python modules: `flask` `picamera` `smbus2`
@@ -74,9 +76,9 @@ StartLimitIntervalSec=300
 
 [Service]
 User=root
-WorkingDirectory=/home/nachteule/nightowlDashboard
+WorkingDirectory=/home/nightowl/nightowlDashboard
 Environment=CAMERA=pi
-ExecStart=/bin/env python3 /home/nachteule/nightowlDashboard/app.py
+ExecStart=/bin/env python3 /home/nightowl/nightowlDashboard/app.py
 Restart=always
 RestartSec=30
 
