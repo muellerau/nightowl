@@ -15,6 +15,7 @@ class Timelapse:
         self._conversion_running = False
         self._movie_framerate = 24
         # initialize defaults
+        self.tl_timestamp = datetime.now().strftime('%Y-%m-%d-%H-%M-%S') # timestamp for current timelapse
         self.set_interval()
         self.set_cam_params()
         self._app_cwd = os.getcwd() + '/static/'
@@ -78,6 +79,9 @@ class Timelapse:
             if self._cam_settings['ir_light']:
                 self._cameyes = IReyes()
             
+            # update timestamp
+            self.tl_timestamp = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
+            
             # main working area
             if self._tinterval[2] >= 120:
                 self._slow_capture() # handle large capture intervals individually
@@ -112,7 +116,7 @@ class Timelapse:
     
     def _slow_capture(self) -> None:
         counter = 0
-        tl_timestamp = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
+        #tl_timestamp = datetime.now().strftime('%Y-%m-%d-%H-%M-%S') # generated/updated for each run only; see self.start()
         # loop capture until stopped
         while self._running:
             if self._cam_settings['ir_light']:
@@ -122,7 +126,7 @@ class Timelapse:
                 if self._cam_settings['camiso'] > 0: # if ISO is set, fix camera exposure
                     self._fix_cam_exp(camera)
                 # Capture image
-                camera.capture(self._app_cwd + self._cam_settings['tmp_dir']+'/timelapse_'+tl_timestamp+'_frame_'+str(counter).zfill(6)+'.jpg',
+                camera.capture(self._app_cwd + self._cam_settings['tmp_dir']+'/timelapse_'+self.tl_timestamp+'_frame_'+str(counter).zfill(6)+'.jpg',
                                 format = 'jpeg', thumbnail = None, bayer = False)
                 counter += 1
             if self._cam_settings['ir_light']:
@@ -133,12 +137,12 @@ class Timelapse:
         if self._cam_settings['ir_light']:
             self._cameyes.turn_on()
             sleep(1)
-        tl_timestamp = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
+        #tl_timestamp = datetime.now().strftime('%Y-%m-%d-%H-%M-%S') # generated/updated for each run only; see self.start()
         with PiCamera(resolution = self._cam_settings['camresolution']) as camera:
             if self._cam_settings['camiso']: # if ISO is set, fix camera exposure
                 self._fix_cam_exp(camera)
             # Capture images continuously with small delays
-            for image in camera.capture_continuous(self._app_cwd + self._cam_settings['tmp_dir']+'/timelapse_'+tl_timestamp+'_frame_{counter:06d}.jpg',
+            for image in camera.capture_continuous(self._app_cwd + self._cam_settings['tmp_dir']+'/timelapse_'+self.tl_timestamp+'_frame_{counter:06d}.jpg',
                                                     format = 'jpeg', thumbnail = None, bayer = False):
                 self._wait()
                 if not self._running:
@@ -150,12 +154,12 @@ class Timelapse:
         # combine image captures to movie
         if not self._conversion_running:
             self._conversion_running = True
-            tl_timestamp = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
-            tmpfile = self._app_cwd + self._cam_settings['tmp_dir'] + '/ffmpeg_zeitraffer_' + tl_timestamp + '.mp4'
-            outfile = self._app_cwd + self._cam_settings['mov_dir'] + '/zeitraffer_' + tl_timestamp + '.mp4'
+            #tl_timestamp = datetime.now().strftime('%Y-%m-%d-%H-%M-%S') # generated/updated for each run only; see self.start()
+            tmpfile = self._app_cwd + self._cam_settings['tmp_dir'] + '/ffmpeg_zeitraffer_' + self.tl_timestamp + '.mp4'
+            outfile = self._app_cwd + self._cam_settings['mov_dir'] + '/zeitraffer_' + self.tl_timestamp + '.mp4'
             # construct command
             #ffmpeg_cmd = 'ffmpeg -framerate ' + str(self._movie_framerate) + ' -pattern_type glob -i "' + self._app_cwd+self._cam_settings['tmp_dir']+'/timelapse_*.jpg" -c:v libx264 ' + tmpfile
-            ffmpeg_cmd = 'ffmpeg -framerate ' + str(self._movie_framerate) + ' -i "' + self._app_cwd+self._cam_settings['tmp_dir']+ '/timelapse_'+ tl_timestamp +'_frame_%06d.jpg" -c:v libx264 -preset ultrafast ' + tmpfile
+            ffmpeg_cmd = 'ffmpeg -framerate ' + str(self._movie_framerate) + ' -i "' + self._app_cwd+self._cam_settings['tmp_dir']+ '/timelapse_'+self.tl_timestamp+'_frame_%06d.jpg" -c:v libx264 -preset ultrafast ' + tmpfile
             epilogue_cmd = 'mv ' + tmpfile + ' ' + outfile
             final_cmd = ffmpeg_cmd + ' && ' + epilogue_cmd
             # run frame combination
