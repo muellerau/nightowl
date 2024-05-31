@@ -54,7 +54,7 @@ def tlpage():
         'nowtime': time.ctime(),
         'camsettings': timelapse_c.cam_settings,
         'lapse_interval': (lapse_interval[0].strftime('%y-%m-%dT%H:%M'), lapse_interval[1], lapse_interval[2]),
-        'lapse_interval_text': ('Start', 'Dauer (in Stunden)', 'acc-Faktor'),
+        'lapse_interval_text': ('Start', 'Aufnahmedauer (in Stunden)', 'Zeitkompressionsfaktor'),
         'camstatus': timelapse_c.status,
         'preview_img': None,
         'camresolution_options': {'1920x1080 (FullHD 16:9)':'1920x1080',
