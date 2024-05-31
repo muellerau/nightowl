@@ -11,7 +11,7 @@
       <p>Dauer des Zeitrafferfilms: {{ lapse_interval[1]/lapse_interval[2] * 60 }} Minuten</p>
       <h4>Kamera</h4>
       <p>Auflösung: {{ camsettings['camresolution'] }}</p>
-      <p>ISO: {{ camsettings['camiso'] }}</p>
+      <p>ISO: {{ camsettings['camiso'] }} (0 = auto)</p>
       <p>Infrarotlicht: {% if camsettings['ir_light'] %}ein{% else %}aus{% endif %}</p>
   </div>
   {% if camstatus %}
