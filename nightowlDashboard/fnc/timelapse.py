@@ -154,7 +154,8 @@ class Timelapse:
             tmpfile = self._app_cwd + self._cam_settings['tmp_dir'] + '/ffmpeg_zeitraffer_' + tl_timestamp + '.mp4'
             outfile = self._app_cwd + self._cam_settings['mov_dir'] + '/zeitraffer_' + tl_timestamp + '.mp4'
             # construct command
-            ffmpeg_cmd = 'ffmpeg -framerate ' + str(self._movie_framerate) + ' -pattern_type glob -i "' + self._app_cwd+self._cam_settings['tmp_dir']+'/timelapse_*.jpg" -c:v libx264 ' + tmpfile
+            #ffmpeg_cmd = 'ffmpeg -framerate ' + str(self._movie_framerate) + ' -pattern_type glob -i "' + self._app_cwd+self._cam_settings['tmp_dir']+'/timelapse_*.jpg" -c:v libx264 ' + tmpfile
+            ffmpeg_cmd = 'ffmpeg -framerate ' + str(self._movie_framerate) + ' -i "' + self._app_cwd+self._cam_settings['tmp_dir']+ '/timelapse_'+ tl_timestamp +'_frame_%06d.jpg" -c:v libx264 --preset ultrafast ' + tmpfile
             epilogue_cmd = 'mv ' + tmpfile + ' ' + outfile
             final_cmd = ffmpeg_cmd + ' && ' + epilogue_cmd
             # run frame combination
