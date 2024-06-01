@@ -33,6 +33,9 @@ app.config['MOV_FOLDER'] = 'static/mov/'
 #app.config['TMP_FOLDER'] = 'static/tmp/'
 app.config['AHT20_FOLDER'] = 'static/aht20/'
 
+app.config['LIVESTREAM'] = 0 # livestream status lock
+# (will use time.time(); if difference to current time >10sec the thread has been terminated by the module; not elegant, but will do the job)
+
 @app.route('/')
 def index():
     """Start page."""
@@ -56,6 +59,7 @@ def tlpage():
         'lapse_interval_data': (lapse_interval[0].strftime('%Y-%m-%dT%H:%M'), lapse_interval[1], lapse_interval[2]),
         'lapse_interval_text': ('Start', 'Aufnahmedauer (in Stunden)', 'Zeitkompressionsfaktor'),
         'camstatus': timelapse_c.status,
+        'livestatus': ((time.time() - app.config['LIVESTREAM']) < 12), # time-based lock for livestream thread (not a good solution, but ok for now)
         'preview_img': None,
         'camresolution_options': {'1920x1080 (FullHD 16:9)':'1920x1080',
                                     '1440x1080 (4:3)':'1440x1080',
@@ -211,6 +215,9 @@ def livepage():
         'IRstate': bool(redeyes.status),
         'camstatus': timelapse_c.status
     }
+    
+    app.config['LIVESTREAM'] = time.time() # update livestream status
+    
     if request.method == 'POST':
         if request.form.get('IRled_state') == 'IRon':
             redeyes.turn_on()

@@ -25,6 +25,10 @@
       <button name="abort" type="submit" value="abort">Aufnahme stoppen</button>
     </form>
   </div>
+  {% elif livestatus %}
+  <div>
+    <h2>Bitte kurz warten - Livestream noch in Benutzung. Diese Seite aktualisieren um es nochmal zu versuchen.</h2>
+  </div>
   {% else %}
   <div>
     <h3>Neue Zeitrafferkonfiguration</h3>
