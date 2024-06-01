@@ -38,7 +38,7 @@ class Timelapse:
             self._cam_awb_gains = None
             
             tnow = datetime.now()
-            prev_img = self._app_cwd + self._cam_settings['tmp_dir']+'/preview_'+ tnow.strftime('%y-%m-%d-%H-%M-%S') +'.jpg'
+            prev_img = self._app_cwd + self._cam_settings['tmp_dir']+'/preview_'+ tnow.strftime('%Y-%m-%d-%H-%M-%S') +'.jpg'
             
             if self._cam_settings['ir_light']:
                 self._cameyes = IReyes()
@@ -194,7 +194,10 @@ class Timelapse:
     def _wait(self) -> None:
         if (self._tinterval[0] + timedelta(hours=self._tinterval[1])) < datetime.now():
             self.stop()
-        sleep(self._tinterval[2] / self._movie_framerate)
+        # wait for next frame
+        #sleep(self._tinterval[2] / self._movie_framerate) # this does not account for any capture delays
+        # calculate wait steps based on acceleration factor and datetime (will account for variable capture delays)
+        sleep( (datetime.now() - self._tinterval[0]).total_seconds() % (self._tinterval[2]/self._movie_framerate) )
 
     @property
     def current_interval(self) -> tuple:
