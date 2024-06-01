@@ -20,7 +20,7 @@ class Timelapse:
         self.set_cam_params()
         self._app_cwd = os.getcwd() + '/static/'
     
-    def set_cam_params(self, camresolution: str = '1280x720', camiso: int = 0, ir_light: bool = False, tmp_dir: str = 'tmp', mov_dir: str = 'mov') -> None:
+    def set_cam_params(self, camresolution: str = '854x480', camiso: int = 0, ir_light: bool = False, tmp_dir: str = 'tmp', mov_dir: str = 'mov') -> None:
         # collect parameters
         self._cam_settings = {
             'camresolution': camresolution,
