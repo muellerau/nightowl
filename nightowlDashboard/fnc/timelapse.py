@@ -197,7 +197,7 @@ class Timelapse:
         # wait for next frame
         #sleep(self._tinterval[2] / self._movie_framerate) # this does not account for any capture delays
         # calculate wait steps based on acceleration factor and datetime (will account for variable capture delays)
-        sleep( (datetime.now() - self._tinterval[0]).total_seconds() % (self._tinterval[2]/self._movie_framerate) )
+        sleep( (self._tinterval[2]/self._movie_framerate) - ((datetime.now() - self._tinterval[0]).total_seconds() % (self._tinterval[2]/self._movie_framerate)) )
 
     @property
     def current_interval(self) -> tuple:
