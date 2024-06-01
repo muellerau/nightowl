@@ -53,7 +53,7 @@ def tlpage():
     templateData = {
         'nowtime': time.ctime(),
         'camsettings': timelapse_c.cam_settings,
-        'lapse_interval': (lapse_interval[0].strftime('%y-%m-%dT%H:%M'), lapse_interval[1], lapse_interval[2]),
+        'lapse_interval': (lapse_interval[0].strftime('%Y-%m-%d - %H:%M'), lapse_interval[1], lapse_interval[2]),
         'lapse_interval_text': ('Start', 'Aufnahmedauer (in Stunden)', 'Zeitkompressionsfaktor'),
         'camstatus': timelapse_c.status,
         'preview_img': None,
@@ -111,7 +111,7 @@ def tlpage():
             # new interval parameters
             timelapse_c.set_interval(newstart, newduration, newfacc)
             lapse_interval = timelapse_c.current_interval
-            templateData['lapse_interval'] = (lapse_interval[0].strftime('%Y-%m-%dT%H:%M'), lapse_interval[1], lapse_interval[2])
+            templateData['lapse_interval'] = (lapse_interval[0].strftime('%Y-%m-%d - %H:%M'), lapse_interval[1], lapse_interval[2])
         elif 'preview' in request.form:
             # capture preview
             templateData['preview_img'] = url_for('static', filename = timelapse_c.capture_preview())
