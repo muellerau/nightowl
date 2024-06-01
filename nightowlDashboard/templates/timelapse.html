@@ -5,10 +5,14 @@
 <div class="content">
   <div>
     <h3>Aktuelle Zeitrafferkonfiguration</h3>
-      {% for i in range(lapse_interval|length) %}
-        <p>{{ lapse_interval_text[i] }} {{ lapse_interval[i] }}</p>
+      {% for i in range(lapse_interval_data|length) %}
+        {% if i == 0 %}
+        <p>{{ lapse_interval_text[i] }} {{ lapse_interval_data[i].replace('T', ' - ') }}</p>
+        {% else %}
+        <p>{{ lapse_interval_text[i] }} {{ lapse_interval_data[i] }}</p>
+        {% endif %}
       {% endfor %}
-      <p>Dauer des Zeitrafferfilms: {{ lapse_interval[1]/lapse_interval[2] * 60 }} Minuten</p>
+      <p>Dauer des Zeitrafferfilms: {{ lapse_interval_data[1]/lapse_interval_data[2] * 60 }} Minuten</p>
       <h4>Kamera</h4>
       <p>Auflösung: {{ camsettings['camresolution'] }}</p>
       <p>ISO: {{ camsettings['camiso'] }} (0 = auto)</p>
@@ -26,13 +30,13 @@
     <h3>Neue Zeitrafferkonfiguration</h3>
       <form method="post">
           <label for="t_start">Start</label>
-          <input type="datetime-local" id="t_start" name="t_start" value="{{ lapse_interval[0] }}">
+          <input type="datetime-local" id="t_start" name="t_start" value="{{ lapse_interval_data[0] }}">
           <br>
           <label for="duration">Aufnahmedauer (Std.)</label>
-          <input type="text" id="duration" name="duration" value="{{ lapse_interval[1] }}">
+          <input type="text" id="duration" name="duration" value="{{ lapse_interval_data[1] }}">
           <br>
           <label for="f_acc">Zeitkompressionsfaktor</label>
-          <input type="text" id="f_acc" name="f_acc" value="{{ lapse_interval[2] }}">
+          <input type="text" id="f_acc" name="f_acc" value="{{ lapse_interval_data[2] }}">
           <br>
           Zur Berechnung: Aufnahmedauer geteilt durch Zeitkompressionsfaktor = Dauer des Zeitrafferfilms
           <br>
